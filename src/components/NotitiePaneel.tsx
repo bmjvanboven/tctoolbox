@@ -105,7 +105,7 @@ export default function NotitiePaneel() {
       {/* Floating button */}
       <button
         onClick={() => setOpen(o => !o)}
-        className={`fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-3 rounded-2xl shadow-lg font-semibold text-sm transition-all ${
+        className={`fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex items-center gap-2 px-4 py-3 rounded-2xl shadow-lg font-semibold text-sm transition-all ${
           open ? "bg-gray-700 text-white" : "bg-[#840562] hover:bg-[#6d044f] text-white"
         }`}
       >
@@ -118,7 +118,7 @@ export default function NotitiePaneel() {
 
       {/* Paneel */}
       {open && (
-        <div className="fixed bottom-20 right-6 z-40 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden max-h-[75vh]">
+        <div className="fixed bottom-20 right-4 md:right-6 z-40 w-[calc(100vw-2rem)] sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden max-h-[75vh]">
           {/* Header tabs */}
           <div className="flex items-center justify-between px-3 py-2.5 border-b border-gray-100">
             <div className="flex gap-1">

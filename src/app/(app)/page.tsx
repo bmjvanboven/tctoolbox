@@ -36,7 +36,7 @@ const tools = [
   },
   {
     href: "/tools/refurbished-inboek",
-    label: "Refurbished inboek",
+    label: "Toestel inname",
     beschrijving: "Toestellen inboeken",
     icon: Smartphone,
     accent: "#840562",

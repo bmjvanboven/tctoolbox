@@ -142,7 +142,7 @@ export default function MeldingenBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-96 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 flex flex-col overflow-hidden">
+        <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 flex flex-col overflow-hidden">
           {/* Header tabs */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <div className="flex gap-1">

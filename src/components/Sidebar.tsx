@@ -4,16 +4,32 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { useSidebar } from "@/lib/SidebarContext";
 
-const tools = [
-  { href: "/tools/adviesformulier", label: "Adviesformulier" },
-  { href: "/tools/belscript", label: "Belscript" },
-  { href: "/tools/klantentool", label: "Klantentool" },
-  { href: "/tools/refurbished-inboek", label: "Refurbished inboek" },
-  { href: "/tools/reparatieprijzen", label: "Reparatieprijzen" },
-  { href: "/tools/snelkeuzes", label: "Snelkeuzes" },
-  { href: "/tools/reparatieplanner", label: "Reparatieplanner" },
+const groepen = [
+  {
+    label: "Klant",
+    items: [
+      { href: "/tools/klantentool", label: "Klantentool" },
+      { href: "/tools/adviesformulier", label: "Adviesformulier" },
+      { href: "/tools/belscript", label: "Belscript" },
+    ],
+  },
+  {
+    label: "Reparatie",
+    items: [
+      { href: "/tools/reparatieprijzen", label: "Reparatieprijzen" },
+      { href: "/tools/refurbished-inboek", label: "Toestel inname" },
+      { href: "/tools/reparatieplanner", label: "Reparatieplanner", disabled: true },
+    ],
+  },
+  {
+    label: "Overig",
+    items: [
+      { href: "/tools/snelkeuzes", label: "Snelkeuzes" },
+    ],
+  },
 ];
 
 function useTakenCount() {
@@ -32,6 +48,22 @@ function useTakenCount() {
   }, []);
 
   return count;
+}
+
+function GroepNav({ label, defaultOpen, children }: { label: string; defaultOpen: boolean; children: React.ReactNode }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div>
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-3 py-1.5 text-[10px] font-bold text-purple-400/80 uppercase tracking-widest hover:text-purple-200 transition-colors"
+      >
+        {label}
+        <ChevronDown size={11} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && <div className="space-y-0.5">{children}</div>}
+    </div>
+  );
 }
 
 function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
@@ -73,16 +105,23 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 
         <div className="border-t border-[#6d044f] my-2" />
 
-        {tools.map((tool) => (
-          <Link
-            key={tool.href}
-            href={tool.href}
-            onClick={onNavigate}
-            className={linkClass(pathname === tool.href)}
-          >
-            {tool.label}
-          </Link>
-        ))}
+        {groepen.map(groep => {
+          const actief = groep.items.some(i => pathname === i.href);
+          return (
+            <GroepNav key={groep.label} label={groep.label} defaultOpen={groep.label === "Klant" || actief}>
+              {groep.items.map(item => (
+                item.disabled
+                  ? <span key={item.href} className="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-purple-900/30 cursor-not-allowed select-none">
+                      {item.label}
+                      <span className="text-[10px] bg-white/10 text-purple-300/60 px-1.5 py-0.5 rounded-full">binnenkort</span>
+                    </span>
+                  : <Link key={item.href} href={item.href} onClick={onNavigate} className={linkClass(pathname === item.href)}>
+                      {item.label}
+                    </Link>
+              ))}
+            </GroepNav>
+          );
+        })}
 
         {isAdmin && (
           <>

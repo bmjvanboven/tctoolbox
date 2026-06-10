@@ -10,7 +10,7 @@ const routeLabels: Record<string, string> = {
   "/tools/adviesformulier": "Adviesformulier",
   "/tools/belscript": "Belscript",
   "/tools/klantentool": "Klantentool",
-  "/tools/refurbished-inboek": "Refurbished inboek",
+  "/tools/refurbished-inboek": "Toestel inname",
   "/tools/reparatieprijzen": "Reparatieprijzen",
   "/tools/snelkeuzes": "Snelkeuzes",
   "/tools/reparatieplanner": "Reparatieplanner",

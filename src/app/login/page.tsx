@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -37,8 +38,7 @@ export default function LoginPage() {
         <div className="absolute top-1/2 -right-12 w-48 h-48 rounded-full bg-[#ef8400]/20" />
 
         <div className="relative z-10 text-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-wit.png" alt="Telecombinatie" className="h-14 mx-auto mb-12" />
+          <Image src="/logo-wit.png" alt="Telecombinatie" width={160} height={56} className="mx-auto mb-12" />
 
           <h1 className="text-3xl font-black text-white mb-4 leading-tight">
             Welkom bij de<br />Telecombinatie Toolbox
@@ -70,8 +70,7 @@ export default function LoginPage() {
         <div className="w-full max-w-sm">
           {/* Logo op mobiel */}
           <div className="lg:hidden flex justify-center mb-8">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Telecombinatie" className="h-10" />
+            <Image src="/logo.png" alt="Telecombinatie" width={120} height={40} />
           </div>
 
           <div className="mb-8">

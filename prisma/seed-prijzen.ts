@@ -36,7 +36,7 @@ async function main() {
   console.log("Reparatieprijzen geseed.");
 
   // Verkoopprijzen
-  for (const [vi, model] of (verkoopData as { n: string; s: number[]; A: Record<string,number>; B: Record<string,number>; C: Record<string,number> }[]).entries()) {
+  for (const [vi, model] of (verkoopData as unknown as { n: string; s: number[]; A: Record<string,number>; B: Record<string,number>; C: Record<string,number> }[]).entries()) {
     let vm = await prisma.verkoopModel.findUnique({ where: { naam: model.n } });
     if (!vm) {
       vm = await prisma.verkoopModel.create({ data: { naam: model.n, volgorde: vi } });

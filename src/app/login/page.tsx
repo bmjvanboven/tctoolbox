@@ -5,8 +5,8 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 import Image from "next/image";
-import logoWit from "/public/logo-wit.png";
-import logo from "/public/logo.png";
+import logoWit from "../../../public/logo-wit.png";
+import logo from "../../../public/logo.png";
 
 export default function LoginPage() {
   const router = useRouter();

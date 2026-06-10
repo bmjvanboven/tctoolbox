@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useLocatie } from "@/lib/LocatieContext";
+import { useSidebar } from "@/lib/SidebarContext";
 import MeldingenBell from "./MeldingenBell";
 
 const routeLabels: Record<string, string> = {
@@ -34,9 +35,21 @@ function formatDate(): string {
 export default function TopBar() {
   const pathname = usePathname();
   const { locatie, setLocatie, winkels } = useLocatie();
+  const { setOpen } = useSidebar();
 
   return (
-    <header className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0 gap-4">
+    <header className="h-14 bg-white border-b border-gray-200 flex items-center px-4 md:px-6 flex-shrink-0 gap-3">
+      {/* Hamburger — alleen zichtbaar op mobiel */}
+      <button
+        onClick={() => setOpen(true)}
+        className="md:hidden text-gray-600 p-1 rounded hover:bg-gray-100 shrink-0"
+        aria-label="Menu openen"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
       <h1 className="text-base font-semibold text-gray-800 shrink-0">
         {getLabel(pathname)}
       </h1>
@@ -46,18 +59,17 @@ export default function TopBar() {
         <select
           value={locatie}
           onChange={e => setLocatie(e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#840562] bg-white"
+          className="border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#840562] bg-white max-w-[140px] md:max-w-none"
         >
-          <option value="">Locatie kiezen…</option>
+          <option value="">Locatie…</option>
           {winkels.map(w => <option key={w} value={w}>{w}</option>)}
         </select>
 
-        {/* Datum */}
+        {/* Datum — alleen op desktop */}
         <span className="text-sm text-gray-400 capitalize hidden md:block">
           {formatDate()}
         </span>
 
-        {/* Meldingen bell */}
         <MeldingenBell />
       </div>
     </header>

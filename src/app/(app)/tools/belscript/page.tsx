@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Phone, RotateCcw, ChevronRight, User } from "lucide-react";
-
-const LOCATIES = ["Deurne", "Asten", "Gemert", "Veghel", "Geldrop"];
+import { useSession } from "next-auth/react";
+import { useLocatie } from "@/lib/LocatieContext";
 
 type StepType = "script" | "outcome";
 type OptionType = "neutral" | "positive" | "warning" | "solo";
@@ -129,18 +129,27 @@ function renderScript(text: string, naam: string, locatie: string) {
 }
 
 export default function BelscriptPage() {
-  const [fase, setFase] = useState<"setup" | "script">("setup");
-  const [naam, setNaam] = useState("");
-  const [locatie, setLocatie] = useState("");
+  const { data: session } = useSession();
+  const { locatie: ctxLocatie } = useLocatie();
+  const voornaam = session?.user.name?.split(" ")[0] ?? "";
+
+  const [naam, setNaam] = useState(voornaam);
+  const [locatie, setLocatie] = useState(ctxLocatie);
   const [stapId, setStapId] = useState("opening");
+  const [gestart, setGestart] = useState(false);
+
+  // Vul aan zodra context/sessie geladen is
+  useEffect(() => { if (voornaam && !naam) setNaam(voornaam); }, [voornaam]);
+  useEffect(() => { if (ctxLocatie && !locatie) setLocatie(ctxLocatie); }, [ctxLocatie]);
 
   const stap = STEPS[stapId];
   const kanStarten = naam.trim() && locatie;
+  const fase = gestart ? "script" : "setup";
 
   function starten() {
     if (!kanStarten) return;
     setStapId("opening");
-    setFase("script");
+    setGestart(true);
   }
 
   function opnieuw() {
@@ -148,7 +157,7 @@ export default function BelscriptPage() {
   }
 
   function herstarten() {
-    setFase("setup");
+    setGestart(false);
     setStapId("opening");
   }
 
@@ -166,7 +175,7 @@ export default function BelscriptPage() {
 
           <div className="px-7 py-6 space-y-4">
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Uw naam</label>
+              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Jouw naam</label>
               <input
                 type="text"
                 value={naam}
@@ -179,14 +188,16 @@ export default function BelscriptPage() {
 
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Locatie</label>
-              <select
-                value={locatie}
-                onChange={(e) => setLocatie(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#840562] bg-gray-50 focus:bg-white transition-colors appearance-none"
-              >
-                <option value="">Kies locatie…</option>
-                {LOCATIES.map((l) => <option key={l} value={l}>{l}</option>)}
-              </select>
+              {locatie ? (
+                <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 bg-gray-50">
+                  <span className="text-sm text-gray-700 flex-1">{locatie}</span>
+                  <span className="text-xs text-gray-400">via je profiel</span>
+                </div>
+              ) : (
+                <p className="text-sm text-amber-600 bg-amber-50 rounded-xl px-4 py-2.5">
+                  Stel je locatie in via de selector rechtsboven.
+                </p>
+              )}
             </div>
 
             <button

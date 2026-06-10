@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { MessageCircle, Mail, RotateCcw, Copy, Check, BookOpen, X, Plus } from "lucide-react";
-
-const WINKELS   = ["Gemert", "Deurne", "Asten", "Geldrop", "Veghel"];
+import { useLocatie } from "@/lib/LocatieContext";
 const PROVIDERS = ["KPN", "ODIDO", "Vodafone", "Ben", "Lebara", "Youfone"];
 const LOG_KEY   = "tc_logboek_items";
 
@@ -116,7 +115,7 @@ function DupWarn({ phone }: { phone: string }) {
 
 export default function KlantentoolPage() {
   const [tab, setTab] = useState<Tab>("abonnement");
-  const [winkel, setWinkel] = useState("");
+  const { locatie: winkel } = useLocatie();
   const [preview, setPreview] = useState("");
   const [lastPhone, setLastPhone] = useState("");
   const [lastEmail, setLastEmail] = useState("");
@@ -387,12 +386,8 @@ export default function KlantentoolPage() {
             </button>
           ))}
         </div>
-        <div className="ml-auto flex gap-2">
-          <div><label className="text-xs text-gray-500 mr-1.5">Locatie:</label>
-            <select value={winkel} onChange={e=>setWinkel(e.target.value)} className="border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#840562]">
-              <option value="">Kies…</option>{WINKELS.map(w=><option key={w}>{w}</option>)}
-            </select>
-          </div>
+        <div className="ml-auto flex items-center gap-2">
+          {winkel && <span className="text-xs text-gray-400 border border-gray-200 rounded-lg px-2.5 py-1.5">{winkel}</span>}
           <button onClick={()=>{setLogs(getLogs());setShowLog(true);}} className="flex items-center gap-1.5 border border-gray-200 text-gray-500 hover:bg-gray-50 px-3 py-1.5 rounded-lg text-sm transition-colors"><BookOpen size={14} />Logboek</button>
         </div>
       </div>

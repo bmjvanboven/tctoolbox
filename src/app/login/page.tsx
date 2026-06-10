@@ -46,15 +46,16 @@ export default function LoginPage() {
             Welkom bij de<br />Telecombinatie Toolbox
           </h1>
           <p className="text-purple-200 text-base leading-relaxed max-w-xs mx-auto">
-            Jouw centrale platform voor alle winkels — taken, tools, notities en meer op één plek.
+            Alles wat je nodig hebt als team op één plek. Taken bijhouden, notities delen, prijzen opzoeken en nog veel meer.
           </p>
 
           <div className="mt-12 flex flex-col gap-3 text-left max-w-xs mx-auto">
             {[
-              "Klantberichten via WhatsApp & e-mail",
-              "Taken toewijzen aan collega's",
+              "Taken aanmaken & toewijzen aan collega's",
+              "Notities koppelen aan taken & vestigingen",
               "Reparatieprijzen & inkoopberekeningen",
-              "Teamnotities per vestiging",
+              "Belscripts, snelkeuzes & klantentool",
+              "Refurbished inboeken & verkoopprijzen",
             ].map(item => (
               <div key={item} className="flex items-center gap-3">
                 <div className="w-5 h-5 rounded-full bg-[#ef8400] flex items-center justify-center shrink-0">
@@ -70,12 +71,37 @@ export default function LoginPage() {
       {/* Rechter kolom — loginformulier */}
       <div className="flex-1 flex items-center justify-center bg-[#f8f8f8] px-6">
         <div className="w-full max-w-sm">
-          {/* Logo op mobiel */}
-          <div className="lg:hidden flex justify-center mb-8">
-            <Image src={logo} alt="Telecombinatie" className="h-10 w-auto" />
+          {/* Logo + welkomsttekst op mobiel */}
+          <div className="lg:hidden mb-8">
+            <div className="flex justify-center mb-6">
+              <Image src={logo} alt="Telecombinatie" className="h-10 w-auto" />
+            </div>
+            <h1 className="text-2xl font-black text-gray-900 mb-2 leading-tight">
+              Welkom bij de<br />Telecombinatie Toolbox
+            </h1>
+            <p className="text-gray-500 text-sm leading-relaxed mb-5">
+              Alles wat je nodig hebt als team op één plek. Taken bijhouden, notities delen, prijzen opzoeken en nog veel meer.
+            </p>
+            <div className="flex flex-col gap-2">
+              {[
+                "Taken aanmaken & toewijzen aan collega's",
+                "Notities koppelen aan taken & vestigingen",
+                "Reparatieprijzen & inkoopberekeningen",
+                "Belscripts, snelkeuzes & klantentool",
+                "Refurbished inboeken & verkoopprijzen",
+              ].map(item => (
+                <div key={item} className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-[#840562] flex items-center justify-center shrink-0">
+                    <ArrowRight size={9} className="text-white" />
+                  </div>
+                  <span className="text-xs text-gray-600">{item}</span>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-gray-200 mt-6" />
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6">
             <h2 className="text-2xl font-black text-gray-900">Inloggen</h2>
             <p className="text-gray-400 text-sm mt-1">Toegang tot de Telecombinatie Toolbox</p>
           </div>

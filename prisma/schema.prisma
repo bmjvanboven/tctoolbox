@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  SHOPMEDEWERKER
+  RETENTIEMEDEWERKER
+}
+
+model User {
+  id           String           @id @default(cuid())
+  voornaam     String           @default("")
+  achternaam   String           @default("")
+  name         String
+  email        String           @unique
+  password     String
+  role         Role             @default(SHOPMEDEWERKER)
+  active       Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  meldingen       Melding[]        @relation("MeldingVan")
+  gelezen         MeldingGelezen[]
+  takenAangemaakt Taak[]           @relation("TaakAangemaakt")
+  takenToegewezen Taak[]           @relation("TaakToegewezen")
+  takenAfgerond   Taak[]           @relation("TaakAfgerond")
+  notitiesEigenaar   Notitie[] @relation("NotitieEigenaar")
+  notitiesToegwezen  Notitie[] @relation("NotitieToegewezen")
+}
+
+model SnelkeuzeGroep {
+  id       Int               @id @default(autoincrement())
+  code     Int               @unique
+  naam     String
+  volgorde Int               @default(0)
+  nummers  SnelkeuzeNummer[]
+}
+
+model SnelkeuzeNummer {
+  id       Int            @id @default(autoincrement())
+  code     Int
+  naam     String
+  volgorde Int            @default(0)
+  groep    SnelkeuzeGroep @relation(fields: [groepId], references: [id], onDelete: Cascade)
+  groepId  Int
+}
+
+// ── Reparatieprijzen ──────────────────────────────────────────────────────────
+model ReparatieMerk {
+  id       Int              @id @default(autoincrement())
+  key      String           @unique
+  label    String
+  volgorde Int              @default(0)
+  modellen ReparatieModel[]
+}
+
+model ReparatieModel {
+  id        Int             @id @default(autoincrement())
+  modelKey  String
+  label     String
+  groep     String?
+  volgorde  Int             @default(0)
+  merk      ReparatieMerk   @relation(fields: [merkId], references: [id], onDelete: Cascade)
+  merkId    Int
+  items     ReparatieItem[]
+
+  @@unique([merkId, modelKey])
+}
+
+model ReparatieItem {
+  id      Int            @id @default(autoincrement())
+  cat     String
+  naam    String
+  prijs   Int
+  model   ReparatieModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  modelId Int
+}
+
+// ── Verkoopprijzen (refurbished) ──────────────────────────────────────────────
+model VerkoopModel {
+  id      Int            @id @default(autoincrement())
+  naam    String         @unique
+  volgorde Int           @default(0)
+  prijzen VerkoopPrijs[]
+}
+
+model VerkoopPrijs {
+  id      Int          @id @default(autoincrement())
+  gb      Int
+  grade   String
+  prijs   Int
+  model   VerkoopModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  modelId Int
+
+  @@unique([modelId, gb, grade])
+}
+
+// ── Taken ─────────────────────────────────────────────────────────────────────
+model Taak {
+  id              String    @id @default(cuid())
+  titel           String
+  beschrijving    String?
+  type            String    @default("overig")
+  prioriteit      String    @default("normaal")
+  aangemaakt      DateTime  @default(now())
+  aangemaaaktDoor User      @relation("TaakAangemaakt", fields: [aangemaaktDoorId], references: [id])
+  aangemaaktDoorId String
+  toegewezenAan   User?     @relation("TaakToegewezen", fields: [toegewezenAanId], references: [id])
+  toegewezenAanId String?
+  locatie         String?
+  afgerond        Boolean   @default(false)
+  afgerondOp      DateTime?
+  afgerondDoor    User?     @relation("TaakAfgerond", fields: [afgerondDoorId], references: [id])
+  afgerondDoorId  String?
+  verloopdatum    DateTime?
+}
+
+// ── Notities ─────────────────────────────────────────────────────────────────
+model Notitie {
+  id               String    @id @default(cuid())
+  tekst            String
+  type             String    @default("persoonlijk")
+  locatie          String?
+  eigenaar         User      @relation("NotitieEigenaar", fields: [eigenaarId], references: [id])
+  eigenaarId       String
+  toegewezenAan    User?     @relation("NotitieToegewezen", fields: [toegewezenAanId], references: [id])
+  toegewezenAanId  String?
+  aangemaakt       DateTime  @default(now())
+  bijgewerkt       DateTime  @updatedAt
+  gearchiveerd     Boolean   @default(false)
+}
+
+// ── Meldingen ─────────────────────────────────────────────────────────────────
+enum MeldingDoel {
+  IEDEREEN
+  ROL
+  GEBRUIKER
+}
+
+model Melding {
+  id         String           @id @default(cuid())
+  titel      String
+  tekst      String
+  type       String           @default("info")
+  van        User             @relation("MeldingVan", fields: [vanId], references: [id])
+  vanId      String
+  doel       MeldingDoel      @default(IEDEREEN)
+  doelRol    Role?
+  doelId     String?
+  aangemaakt DateTime         @default(now())
+  gelezen    MeldingGelezen[]
+}
+
+model MeldingGelezen {
+  id        Int      @id @default(autoincrement())
+  melding   Melding  @relation(fields: [meldingId], references: [id], onDelete: Cascade)
+  meldingId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  op        DateTime @default(now())
+
+  @@unique([meldingId, userId])
+}

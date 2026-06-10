@@ -1,0 +1,604 @@
+{
+  "apple": {
+    "label": "Apple iPhone",
+    "models": [
+      {
+        "id": "ip16pm", "label": "iPhone 16 Pro Max", "group": "iPhone 16",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)",        "price": 449 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",           "price": 279 },
+          { "cat": "accu",    "name": "Accu vervangen",                      "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector / Microfoon vervangen", "price": 139 },
+          { "cat": "overig",  "name": "Achterkant vervangen",                "price": 269 }
+        ]
+      },
+      {
+        "id": "ip16p", "label": "iPhone 16 Pro", "group": "iPhone 16",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)",        "price": 439 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",           "price": 249 },
+          { "cat": "accu",    "name": "Accu vervangen",                      "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector / Microfoon vervangen", "price": 139 },
+          { "cat": "overig",  "name": "Achterkant vervangen",                "price": 239 }
+        ]
+      },
+      {
+        "id": "ip16+", "label": "iPhone 16 Plus", "group": "iPhone 16",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)",        "price": 349 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",           "price": 229 },
+          { "cat": "accu",    "name": "Accu vervangen",                      "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector / Microfoon vervangen", "price": 139 },
+          { "cat": "overig",  "name": "Achterkant vervangen",                "price": 219 }
+        ]
+      },
+      {
+        "id": "ip16", "label": "iPhone 16", "group": "iPhone 16",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)",        "price": 299 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",           "price": 199 },
+          { "cat": "accu",    "name": "Accu vervangen",                      "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector / Microfoon vervangen", "price": 139 },
+          { "cat": "overig",  "name": "Achterkant vervangen",                "price": 199 }
+        ]
+      },
+      {
+        "id": "ip15pm", "label": "iPhone 15 Pro Max", "group": "iPhone 15",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)",        "price": 449 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",           "price": 249 },
+          { "cat": "accu",    "name": "Accu vervangen",                      "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector / Microfoon vervangen", "price": 149 },
+          { "cat": "overig",  "name": "Achterkant vervangen",                "price": 239 }
+        ]
+      },
+      {
+        "id": "ip15p", "label": "iPhone 15 Pro", "group": "iPhone 15",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)",        "price": 439 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",           "price": 229 },
+          { "cat": "accu",    "name": "Accu vervangen",                      "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector / Microfoon vervangen", "price": 149 }
+        ]
+      },
+      {
+        "id": "ip15+", "label": "iPhone 15 Plus", "group": "iPhone 15",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)",        "price": 329 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",           "price": 229 },
+          { "cat": "accu",    "name": "Accu vervangen",                      "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector / Microfoon vervangen", "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",                "price": 219 }
+        ]
+      },
+      {
+        "id": "ip15", "label": "iPhone 15", "group": "iPhone 15",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)",        "price": 299 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",           "price": 199 },
+          { "cat": "accu",    "name": "Accu vervangen",                      "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector / Microfoon vervangen", "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",                "price": 199 }
+        ]
+      },
+      {
+        "id": "ip14pm", "label": "iPhone 14 Pro Max", "group": "iPhone 14",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 379 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",    "price": 239 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector vervangen",      "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 299 }
+        ]
+      },
+      {
+        "id": "ip14p", "label": "iPhone 14 Pro", "group": "iPhone 14",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 329 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",    "price": 219 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector vervangen",      "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 299 }
+        ]
+      },
+      {
+        "id": "ip14+", "label": "iPhone 14 Plus", "group": "iPhone 14",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 259 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",    "price": 179 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector vervangen",      "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 199 }
+        ]
+      },
+      {
+        "id": "ip14", "label": "iPhone 14", "group": "iPhone 14",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 229 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",    "price": 159 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector vervangen",      "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 179 }
+        ]
+      },
+      {
+        "id": "ip13pm", "label": "iPhone 13 Pro Max", "group": "iPhone 13",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 249 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",    "price": 179 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector vervangen",      "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 299 }
+        ]
+      },
+      {
+        "id": "ip13p", "label": "iPhone 13 Pro", "group": "iPhone 13",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 249 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",    "price": 179 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector vervangen",      "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 299 }
+        ]
+      },
+      {
+        "id": "ip13", "label": "iPhone 13", "group": "iPhone 13",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 199 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",    "price": 139 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector vervangen",      "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 229 }
+        ]
+      },
+      {
+        "id": "ip13m", "label": "iPhone 13 Mini", "group": "iPhone 13",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 229 },
+          { "cat": "scherm",  "name": "Scherm vervangen (namaak)",    "price": 139 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 99  },
+          { "cat": "overig",  "name": "Laadconnector vervangen",      "price": 119 },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 199 }
+        ]
+      },
+      {
+        "id": "ip12pm", "label": "iPhone 12 Pro Max", "group": "iPhone 12",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 239  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 169  },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 99   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 119  },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 119  },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 79   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 69   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 159  },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 119  },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 99   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 99   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 99   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 279  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 89   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 59   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 15   }
+        ]
+      },
+      {
+        "id": "ip12p", "label": "iPhone 12 Pro", "group": "iPhone 12",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 179  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 119  },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 99   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 119  },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 119  },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 79   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 69   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 129  },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 119  },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 99   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 99   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 99   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 249  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 89   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 59   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 15   }
+        ]
+      },
+      {
+        "id": "ip12", "label": "iPhone 12", "group": "iPhone 12",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 179  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 119  },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 99   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 119  },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 119  },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 79   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 69   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 129  },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 119  },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 99   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 99   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 99   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 229  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 89   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 59   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 15   }
+        ]
+      },
+      {
+        "id": "ip12m", "label": "iPhone 12 Mini", "group": "iPhone 12",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 179  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 119  },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 99   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 119  },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 119  },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 79   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 69   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 129  },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 119  },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 99   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 99   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 99   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 199  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 89   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 59   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 15   }
+        ]
+      },
+      {
+        "id": "ip11pm", "label": "iPhone 11 Pro Max", "group": "iPhone 11",
+        "repairs": [
+          { "cat": "scherm", "name": "Scherm vervangen (origineel)", "price": 199 },
+          { "cat": "scherm", "name": "Scherm vervangen (namaak)",    "price": 149 },
+          { "cat": "accu",   "name": "Accu vervangen",               "price": 79  }
+        ]
+      },
+      {
+        "id": "ip11p", "label": "iPhone 11 Pro", "group": "iPhone 11",
+        "repairs": [
+          { "cat": "scherm", "name": "Scherm vervangen (origineel)", "price": 179 },
+          { "cat": "scherm", "name": "Scherm vervangen (namaak)",    "price": 129 },
+          { "cat": "accu",   "name": "Accu vervangen",               "price": 79  }
+        ]
+      },
+      {
+        "id": "ip11", "label": "iPhone 11", "group": "iPhone 11",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 129  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 99   },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 79   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 99   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 79   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 99   },
+          { "cat": "geluid",   "name": "Gaasje oorspeaker",               "price": 30   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 89   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 69   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 109  },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 79   },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 89   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 99   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 99   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 199  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 89   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 69   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 15   }
+        ]
+      },
+      {
+        "id": "ipxsmax", "label": "iPhone XS Max", "group": "iPhone X-serie",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 159  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 109  },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 69   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 99   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 79   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 99   },
+          { "cat": "geluid",   "name": "Gaasje oorspeaker",               "price": 30   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 89   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 69   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 139  },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 89   },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 89   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 99   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 99   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 229  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 89   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 69   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 15   }
+        ]
+      },
+      {
+        "id": "ipxs", "label": "iPhone XS", "group": "iPhone X-serie",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 139  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 99   },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 69   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 99   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 79   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 99   },
+          { "cat": "geluid",   "name": "Gaasje oorspeaker",               "price": 30   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 89   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 69   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 139  },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 89   },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 89   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 99   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 99   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 199  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 89   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 69   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 15   }
+        ]
+      },
+      {
+        "id": "ipxr", "label": "iPhone XR", "group": "iPhone X-serie",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 129  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 99   },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 69   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 99   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 79   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 99   },
+          { "cat": "geluid",   "name": "Gaasje oorspeaker",               "price": 30   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 89   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 69   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 109  },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 69   },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 89   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 99   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 99   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 179  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 69   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 69   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 15   }
+        ]
+      },
+      {
+        "id": "ipx", "label": "iPhone X", "group": "iPhone X-serie",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 129  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 99   },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 69   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 99   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 79   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 89   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 59   },
+          { "cat": "geluid",   "name": "Aux aansluiting vervangen",       "price": 99   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 129  },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 89   },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 89   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 99   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 99   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 179  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 69   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 69   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 14.5 }
+        ]
+      },
+      {
+        "id": "ip8+", "label": "iPhone 8 Plus", "group": "iPhone 8-serie",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",          "price": 129  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",             "price": 99   },
+          { "cat": "accu",     "name": "Accu vervangen",                        "price": 59   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",               "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",              "price": 99   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",                 "price": 49   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",                  "price": 49   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",             "price": 79   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",                 "price": 59   },
+          { "cat": "camera",   "name": "Camera achter vervangen",               "price": 99   },
+          { "cat": "camera",   "name": "Camera voor vervangen",                 "price": 59   },
+          { "cat": "camera",   "name": "Flitser vervangen",                     "price": 79   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",                   "price": 79   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",                  "price": 79   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",                    "price": 79   },
+          { "cat": "knoppen",  "name": "Homeknop vervangen (geen Touch ID)",    "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",                  "price": 179  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",                "price": 79   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",                   "price": 49   },
+          { "cat": "overig",   "name": "SIM card tray",                         "price": 14.5 }
+        ]
+      },
+      {
+        "id": "ip8", "label": "iPhone 8", "group": "iPhone 8-serie",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 109  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 79   },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 59   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 99   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 49   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 49   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 79   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 59   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 89   },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 59   },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 79   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 79   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 79   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 79   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 149  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 79   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 59   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 14.5 }
+        ]
+      },
+      {
+        "id": "ipse", "label": "iPhone SE (2020)", "group": "iPhone 8-serie",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",          "price": 109  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",             "price": 79   },
+          { "cat": "accu",     "name": "Accu vervangen",                        "price": 59   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",               "price": 99   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",              "price": 99   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",                 "price": 49   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",                  "price": 49   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",             "price": 79   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",                 "price": 59   },
+          { "cat": "camera",   "name": "Camera achter vervangen",               "price": 89   },
+          { "cat": "camera",   "name": "Camera voor vervangen",                 "price": 59   },
+          { "cat": "camera",   "name": "Flitser vervangen",                     "price": 79   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",                   "price": 79   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",                  "price": 79   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",                    "price": 79   },
+          { "cat": "knoppen",  "name": "Homeknop vervangen (geen Touch ID)",    "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",                  "price": 149  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",                "price": 79   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",                   "price": 59   },
+          { "cat": "overig",   "name": "SIM card tray",                         "price": 14.5 }
+        ]
+      },
+      {
+        "id": "ip7+", "label": "iPhone 7 Plus", "group": "iPhone 7-serie",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",          "price": 109  },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",             "price": 79   },
+          { "cat": "accu",     "name": "Accu vervangen",                        "price": 59   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",               "price": 79   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",              "price": 79   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",                 "price": 49   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",                  "price": 49   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",             "price": 79   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",                 "price": 59   },
+          { "cat": "geluid",   "name": "Aux aansluiting vervangen",             "price": 79   },
+          { "cat": "camera",   "name": "Camera achter vervangen",               "price": 109  },
+          { "cat": "camera",   "name": "Camera voor vervangen",                 "price": 59   },
+          { "cat": "camera",   "name": "Flitser vervangen",                     "price": 79   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",                   "price": 79   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",                  "price": 79   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",                    "price": 79   },
+          { "cat": "knoppen",  "name": "Homeknop vervangen (geen Touch ID)",    "price": 99   },
+          { "cat": "overig",   "name": "Achterkant vervangen",                  "price": 129  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",                "price": 79   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",                   "price": 49   },
+          { "cat": "overig",   "name": "SIM card tray",                         "price": 14.5 }
+        ]
+      },
+      {
+        "id": "ip7", "label": "iPhone 7", "group": "iPhone 7-serie",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",    "price": 99   },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",       "price": 69   },
+          { "cat": "accu",     "name": "Accu vervangen",                  "price": 59   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",         "price": 79   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",        "price": 79   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",           "price": 49   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",            "price": 49   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",       "price": 79   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",           "price": 59   },
+          { "cat": "geluid",   "name": "Aux aansluiting vervangen",       "price": 79   },
+          { "cat": "camera",   "name": "Camera achter vervangen",         "price": 79   },
+          { "cat": "camera",   "name": "Camera voor vervangen",           "price": 59   },
+          { "cat": "camera",   "name": "Flitser vervangen",               "price": 79   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",             "price": 79   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",            "price": 79   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",              "price": 79   },
+          { "cat": "overig",   "name": "Achterkant vervangen",            "price": 129  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",          "price": 79   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",             "price": 49   },
+          { "cat": "overig",   "name": "SIM card tray",                   "price": 14.5 }
+        ]
+      },
+      {
+        "id": "ip6s", "label": "iPhone 6S", "group": "Ouder",
+        "repairs": [
+          { "cat": "scherm",   "name": "Scherm vervangen (origineel)",          "price": 79   },
+          { "cat": "scherm",   "name": "Scherm vervangen (namaak)",             "price": 59   },
+          { "cat": "accu",     "name": "Accu vervangen",                        "price": 49   },
+          { "cat": "overig",   "name": "Laadconnector vervangen",               "price": 69   },
+          { "cat": "geluid",   "name": "Microfoon (bellen/onder)",              "price": 69   },
+          { "cat": "geluid",   "name": "Luidspreker vervangen",                 "price": 49   },
+          { "cat": "geluid",   "name": "Oorspeaker vervangen",                  "price": 49   },
+          { "cat": "geluid",   "name": "Microfoon (achter/filmen)",             "price": 59   },
+          { "cat": "geluid",   "name": "Microfoon (voor/Siri)",                 "price": 59   },
+          { "cat": "geluid",   "name": "Aux aansluiting vervangen",             "price": 69   },
+          { "cat": "camera",   "name": "Camera achter vervangen",               "price": 59   },
+          { "cat": "camera",   "name": "Camera voor vervangen",                 "price": 59   },
+          { "cat": "camera",   "name": "Flitser vervangen",                     "price": 59   },
+          { "cat": "knoppen",  "name": "Powerknop vervangen",                   "price": 59   },
+          { "cat": "knoppen",  "name": "Volumeknop vervangen",                  "price": 59   },
+          { "cat": "knoppen",  "name": "Muteknop vervangen",                    "price": 59   },
+          { "cat": "knoppen",  "name": "Homeknop vervangen (geen Touch ID)",    "price": 49   },
+          { "cat": "overig",   "name": "Achterkant vervangen",                  "price": 109  },
+          { "cat": "overig",   "name": "WiFi antenne vervangen",                "price": 79   },
+          { "cat": "overig",   "name": "Trilmotor vervangen",                   "price": 49   },
+          { "cat": "overig",   "name": "SIM card tray",                         "price": 14.5 }
+        ]
+      }
+    ]
+  },
+  "samsung": {
+    "label": "Samsung",
+    "models": [
+      {
+        "id": "galaxya02", "label": "Galaxy A02",
+        "repairs": [
+          { "cat": "scherm", "name": "Scherm vervangen (origineel)", "price": 109 }
+        ]
+      },
+      {
+        "id": "galaxya6", "label": "Galaxy A6 (2018)",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 119 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 99  },
+          { "cat": "camera",  "name": "Camera achter vervangen",      "price": 99  },
+          { "cat": "camera",  "name": "Camera voor vervangen",        "price": 99  },
+          { "cat": "overig",  "name": "Laadpoort vervangen",          "price": 99  }
+        ]
+      },
+      {
+        "id": "galaxya7", "label": "Galaxy A7 (2018)",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 129 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 59  },
+          { "cat": "camera",  "name": "Camera achter vervangen",      "price": 69  },
+          { "cat": "camera",  "name": "Camera voor vervangen",        "price": 59  },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 59  },
+          { "cat": "overig",  "name": "Laadpoort vervangen",          "price": 69  }
+        ]
+      },
+      {
+        "id": "galaxya8", "label": "Galaxy A8 (2018)",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 149 },
+          { "cat": "accu",    "name": "Accu vervangen",               "price": 59  },
+          { "cat": "camera",  "name": "Camera achter vervangen",      "price": 69  },
+          { "cat": "camera",  "name": "Camera voor vervangen",        "price": 59  },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 59  },
+          { "cat": "overig",  "name": "Laadpoort vervangen",          "price": 79  }
+        ]
+      },
+      {
+        "id": "note10plus", "label": "Galaxy Note 10+",
+        "repairs": [
+          { "cat": "scherm",  "name": "Scherm vervangen (origineel)", "price": 299 },
+          { "cat": "overig",  "name": "Achterkant vervangen",         "price": 69  }
+        ]
+      }
+    ]
+  }
+}

@@ -26,6 +26,19 @@ export const metadata: Metadata = {
   },
 };
 
+const splashScript = `
+(function(){
+  var s=document.createElement('div');
+  s.id='tc-splash';
+  s.innerHTML='<img src="/logo-wit.png" width="180" style="opacity:.95" alt=""/><div style="display:flex;gap:6px"><div class="sd"></div><div class="sd" style="animation-delay:.2s"></div><div class="sd" style="animation-delay:.4s"></div></div>';
+  s.style.cssText='position:fixed;inset:0;z-index:9999;background:#840562;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px';
+  var style=document.createElement('style');
+  style.textContent='.sd{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);animation:sp 1.2s ease-in-out infinite}@keyframes sp{0%,100%{opacity:.3;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}';
+  document.head.appendChild(style);
+  document.body.appendChild(s);
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,30 +51,10 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
         <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png" />
+        {/* Splash aanmaken buiten React tree zodat hydration niet conflicteert */}
+        <script dangerouslySetInnerHTML={{ __html: splashScript }} />
       </head>
       <body className="min-h-full">
-        {/* Splash: statische HTML, zichtbaar vóór JS laadt */}
-        <div
-          id="tc-splash"
-          style={{
-            position: "fixed", inset: 0, zIndex: 9999,
-            backgroundColor: "#840562",
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center", gap: "24px",
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-wit.png" alt="" width={180} style={{ opacity: 0.95 }} />
-          <div style={{ display: "flex", gap: "6px" }}>
-            {[0, 1, 2].map(i => (
-              <div key={i} style={{
-                width: 7, height: 7, borderRadius: "50%",
-                backgroundColor: "rgba(255,255,255,0.5)",
-                animation: `splashPulse 1.2s ease-in-out ${i * 0.2}s infinite`,
-              }} />
-            ))}
-          </div>
-        </div>
         <SplashRemover />
         <ServiceWorker />
         <InstallBanner />

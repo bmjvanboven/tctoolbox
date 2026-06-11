@@ -178,7 +178,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-60 min-h-screen bg-[#840562] flex-col shrink-0">
+      <aside className="hidden md:flex w-60 h-screen bg-[#840562] flex-col shrink-0 overflow-y-auto sticky top-0">
         <div className="px-5 py-5 border-b border-[#6d044f]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-wit.png" alt="Telecombinatie" width={160} />

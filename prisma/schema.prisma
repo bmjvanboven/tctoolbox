@@ -26,6 +26,7 @@ model User {
   updatedAt    DateTime         @updatedAt
   meldingen       Melding[]        @relation("MeldingVan")
   gelezen         MeldingGelezen[]
+  pushSubscripties PushSubscriptie[]
   takenAangemaakt Taak[]           @relation("TaakAangemaakt")
   takenToegewezen Taak[]           @relation("TaakToegewezen")
   takenAfgerond   Taak[]           @relation("TaakAfgerond")
@@ -154,6 +155,16 @@ model Melding {
   doelId     String?
   aangemaakt DateTime         @default(now())
   gelezen    MeldingGelezen[]
+}
+
+model PushSubscriptie {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  aangemaakt DateTime @default(now())
 }
 
 model MeldingGelezen {

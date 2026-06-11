@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import ServiceWorker from "@/components/ServiceWorker";
+import PushManager from "@/components/PushManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +39,10 @@ export default function RootLayout({
       </head>
       <body className="min-h-full">
         <ServiceWorker />
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <PushManager />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

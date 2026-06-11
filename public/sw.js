@@ -27,3 +27,33 @@ self.addEventListener("fetch", e => {
       .catch(() => caches.match(e.request).then(r => r || caches.match("/")))
   );
 });
+
+// Push notificaties
+self.addEventListener("push", e => {
+  if (!e.data) return;
+  let data;
+  try { data = e.data.json(); } catch { data = { titel: "Telecombinatie Toolbox", tekst: e.data.text() }; }
+
+  e.waitUntil(
+    self.registration.showNotification(data.titel || "Telecombinatie Toolbox", {
+      body: data.tekst || "",
+      icon: "/icons/icon-192x192.png",
+      badge: "/icons/icon-96x96.png",
+      data: { url: data.url || "/" },
+      vibrate: [100, 50, 100],
+    })
+  );
+});
+
+// Klik op notificatie → open app
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  const url = e.notification.data?.url || "/";
+  e.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then(cs => {
+      const existing = cs.find(c => c.url.includes(self.location.origin));
+      if (existing) { existing.focus(); existing.navigate(url); }
+      else clients.openWindow(url);
+    })
+  );
+});

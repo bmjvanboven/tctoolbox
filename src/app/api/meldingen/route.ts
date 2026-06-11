@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { stuurPushNaarGebruiker, stuurPushNaarAllen } from "@/lib/push";
 
 // Haal meldingen op voor de ingelogde gebruiker
 export async function GET() {
@@ -60,6 +61,19 @@ export async function POST(req: NextRequest) {
       doelId: doelId || null,
     },
   });
+
+  // Push notificatie sturen
+  const pushPayload = { titel: titel.trim(), tekst: tekst.trim(), url: "/meldingen" };
+  try {
+    if (!doel || doel === "IEDEREEN") {
+      stuurPushNaarAllen(pushPayload).catch(() => {});
+    } else if (doel === "GEBRUIKER" && doelId) {
+      stuurPushNaarGebruiker(doelId, pushPayload).catch(() => {});
+    } else if (doel === "ROL" && doelRol) {
+      const gebruikers = await prisma.user.findMany({ where: { role: doelRol }, select: { id: true } });
+      gebruikers.forEach(g => stuurPushNaarGebruiker(g.id, pushPayload).catch(() => {}));
+    }
+  } catch { /* push faalt stil */ }
 
   return NextResponse.json(melding, { status: 201 });
 }

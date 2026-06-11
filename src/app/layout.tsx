@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import ServiceWorker from "@/components/ServiceWorker";
 import PushManager from "@/components/PushManager";
 import InstallBanner from "@/components/InstallBanner";
+import Splash from "@/components/Splash";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png" />
       </head>
       <body className="min-h-full">
+        <Splash />
         <ServiceWorker />
         <InstallBanner />
         <SessionProvider>

@@ -108,10 +108,10 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
         {groepen.map(groep => {
           const actief = groep.items.some(i => pathname === i.href);
           return (
-            <GroepNav key={groep.label} label={groep.label} defaultOpen={groep.label === "Klant" || actief}>
+            <GroepNav key={groep.label} label={groep.label} defaultOpen={groep.label === "Klant" || groep.label === "Reparatie" || actief}>
               {groep.items.map(item => (
                 item.disabled
-                  ? <span key={item.href} className="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-purple-900/30 cursor-not-allowed select-none">
+                  ? <span key={item.href} className="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-purple-200/40 cursor-not-allowed select-none">
                       {item.label}
                       <span className="text-[10px] bg-white/10 text-purple-300/60 px-1.5 py-0.5 rounded-full">binnenkort</span>
                     </span>

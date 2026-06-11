@@ -5,7 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import ServiceWorker from "@/components/ServiceWorker";
 import PushManager from "@/components/PushManager";
 import InstallBanner from "@/components/InstallBanner";
-import Splash from "@/components/Splash";
+import SplashRemover from "@/components/Splash";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +40,29 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png" />
       </head>
       <body className="min-h-full">
-        <Splash />
+        {/* Splash: statische HTML, zichtbaar vóór JS laadt */}
+        <div
+          id="tc-splash"
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999,
+            backgroundColor: "#840562",
+            display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center", gap: "24px",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-wit.png" alt="" width={180} style={{ opacity: 0.95 }} />
+          <div style={{ display: "flex", gap: "6px" }}>
+            {[0, 1, 2].map(i => (
+              <div key={i} style={{
+                width: 7, height: 7, borderRadius: "50%",
+                backgroundColor: "rgba(255,255,255,0.5)",
+                animation: `splashPulse 1.2s ease-in-out ${i * 0.2}s infinite`,
+              }} />
+            ))}
+          </div>
+        </div>
+        <SplashRemover />
         <ServiceWorker />
         <InstallBanner />
         <SessionProvider>

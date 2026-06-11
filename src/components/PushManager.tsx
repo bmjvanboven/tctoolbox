@@ -47,7 +47,11 @@ export default function PushManager() {
   const [toonBanner, setToonBanner] = useState(false);
   const badgeInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const isMobiel = typeof window !== "undefined"
+    && /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+
   const ondersteund = typeof window !== "undefined"
+    && isMobiel
     && "serviceWorker" in navigator
     && "PushManager" in window
     && "Notification" in window;

@@ -86,6 +86,10 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           Dashboard
         </Link>
 
+        <Link href="/documenten" onClick={onNavigate} className={linkClass(pathname === "/documenten")}>
+          Documenten
+        </Link>
+
         <Link
           href="/taken"
           onClick={onNavigate}

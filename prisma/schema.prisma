@@ -27,6 +27,7 @@ model User {
   meldingen       Melding[]        @relation("MeldingVan")
   gelezen         MeldingGelezen[]
   pushSubscripties PushSubscriptie[]
+  documenten       Document[]
   takenAangemaakt Taak[]           @relation("TaakAangemaakt")
   takenToegewezen Taak[]           @relation("TaakToegewezen")
   takenAfgerond   Taak[]           @relation("TaakAfgerond")
@@ -155,6 +156,22 @@ model Melding {
   doelId     String?
   aangemaakt DateTime         @default(now())
   gelezen    MeldingGelezen[]
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  naam        String
+  beschrijving String?
+  categorie   String
+  url         String
+  mimetype    String
+  grootte     Int
+  toegang     String   @default("IEDEREEN") // IEDEREEN | ADMIN | ROL:SHOPMEDEWERKER etc.
+  uploadDoor  User     @relation(fields: [uploadDoorId], references: [id])
+  uploadDoorId String
+  aangemaakt  DateTime @default(now())
+  bijgewerkt  DateTime @updatedAt
+  gearchiveerd Boolean @default(false)
 }
 
 model PushSubscriptie {

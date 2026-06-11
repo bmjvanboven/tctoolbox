@@ -33,6 +33,9 @@ model User {
   takenAfgerond   Taak[]           @relation("TaakAfgerond")
   notitiesEigenaar   Notitie[] @relation("NotitieEigenaar")
   notitiesToegwezen  Notitie[] @relation("NotitieToegewezen")
+  marketingAangemaakt MarketingMateriaal[] @relation("MarketingAangemaakt")
+  marketingAanvragen  MarketingAanvraag[]  @relation("MarketingAanvrager")
+  marketingGezien     MarketingGezien[]
 }
 
 model SnelkeuzeGroep {
@@ -193,4 +196,47 @@ model MeldingGelezen {
   op        DateTime @default(now())
 
   @@unique([meldingId, userId])
+}
+
+// ── Marketing bibliotheek ─────────────────────────────────────────────────────
+model MarketingMateriaal {
+  id               String               @id @default(cuid())
+  titel            String
+  beschrijving     String?
+  categorie        String               @default("Overig")
+  afbeeldingUrls   String[]
+  filiaalBasis     String?
+  aangemaakt       DateTime             @default(now())
+  bijgewerkt       DateTime             @updatedAt
+  gearchiveerd     Boolean              @default(false)
+  aangemaaktDoor   User                 @relation("MarketingAangemaakt", fields: [aangemaaktDoorId], references: [id])
+  aangemaaktDoorId String
+  aanvragen        MarketingAanvraag[]
+  gezien           MarketingGezien[]
+}
+
+model MarketingGezien {
+  id          Int                @id @default(autoincrement())
+  materiaal   MarketingMateriaal @relation(fields: [materiaalId], references: [id], onDelete: Cascade)
+  materiaalId String
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  op          DateTime           @default(now())
+
+  @@unique([materiaalId, userId])
+}
+
+model MarketingAanvraag {
+  id          String             @id @default(cuid())
+  materiaal   MarketingMateriaal @relation(fields: [materiaalId], references: [id], onDelete: Cascade)
+  materiaalId String
+  aanvrager   User               @relation("MarketingAanvrager", fields: [aanvragerId], references: [id])
+  aanvragerId String
+  filiaal     String
+  opmerking   String?
+  status      String             @default("aangevraagd")
+  aangemaakt  DateTime           @default(now())
+  bijgewerkt  DateTime           @updatedAt
+
+  @@unique([materiaalId, aanvragerId])
 }

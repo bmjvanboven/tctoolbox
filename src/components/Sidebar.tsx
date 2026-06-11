@@ -32,23 +32,26 @@ const groepen = [
   },
 ];
 
-function useTakenCount() {
+function useCount(url: string) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     async function laden() {
       try {
-        const res = await fetch("/api/taken/count");
+        const res = await fetch(url);
         if (res.ok) { const d = await res.json(); setCount(d.count); }
       } catch { /**/ }
     }
     laden();
     const timer = setInterval(laden, 30000);
     return () => clearInterval(timer);
-  }, []);
+  }, [url]);
 
   return count;
 }
+
+function useTakenCount() { return useCount("/api/taken/count"); }
+function useMarketingCount() { return useCount("/api/marketing/count"); }
 
 function GroepNav({ label, defaultOpen, children }: { label: string; defaultOpen: boolean; children: React.ReactNode }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -71,6 +74,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const { data: session } = useSession();
   const isAdmin = session?.user.role === "ADMIN";
   const takenCount = useTakenCount();
+  const marketingCount = useMarketingCount();
 
   const linkClass = (active: boolean) =>
     `flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
@@ -88,6 +92,23 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 
         <Link href="/documenten" onClick={onNavigate} className={linkClass(pathname === "/documenten")}>
           Documenten
+        </Link>
+
+        <Link
+          href="/marketing"
+          onClick={onNavigate}
+          className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+            pathname === "/marketing"
+              ? "bg-white/20 text-white font-medium"
+              : "text-purple-100 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          <span>Marketing</span>
+          {marketingCount > 0 && (
+            <span className="bg-[#ef8400] text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center leading-none">
+              {marketingCount > 99 ? "99+" : marketingCount}
+            </span>
+          )}
         </Link>
 
         <Link

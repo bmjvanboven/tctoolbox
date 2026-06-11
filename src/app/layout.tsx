@@ -4,6 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import ServiceWorker from "@/components/ServiceWorker";
 import PushManager from "@/components/PushManager";
+import InstallBanner from "@/components/InstallBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full">
         <ServiceWorker />
+        <InstallBanner />
         <SessionProvider>
           <PushManager />
           {children}

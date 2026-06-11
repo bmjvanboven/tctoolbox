@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { stuurPushNaarGebruiker } from "@/lib/push";
 
 export async function GET() {
   const session = await auth();
@@ -58,7 +59,7 @@ export async function POST(req: NextRequest) {
     };
     await prisma.melding.create({
       data: {
-        titel: `✅ Nieuwe taak van ${session.user.name}`,
+        titel: `Nieuwe taak van ${session.user.name}`,
         tekst: `${typeLabels[type] ?? "Taak"}: ${titel.trim()}${beschrijving ? `\n${beschrijving.trim()}` : ""}`,
         type: "actie",
         vanId: session.user.id,
@@ -66,6 +67,12 @@ export async function POST(req: NextRequest) {
         doelId: toegewezenAanId,
       },
     });
+
+    stuurPushNaarGebruiker(toegewezenAanId, {
+      titel: `Nieuwe taak van ${session.user.name}`,
+      tekst: titel.trim(),
+      url: "/taken",
+    }).catch(() => {});
   }
 
   return NextResponse.json(taak, { status: 201 });

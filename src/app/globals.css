@@ -33,6 +33,38 @@ body {
   50%       { opacity: 1;   transform: scale(1); }
 }
 
+#tc-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #840562;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  opacity: 1;
+  transition: opacity 400ms ease;
+}
+
+#tc-splash.tc-splash--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tc-splash-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.tc-splash-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  animation: splashPulse 1.2s ease-in-out infinite;
+}
+
 /* Voorkomt autozoom op iOS bij focus op inputvelden */
 input, select, textarea {
   font-size: max(16px, 1em);

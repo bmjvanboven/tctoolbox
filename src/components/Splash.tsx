@@ -1,17 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export default function SplashRemover() {
+export default function Splash() {
+  const [visible, setVisible] = useState(true);
+  const [fading, setFading] = useState(false);
+
   useEffect(() => {
-    const el = document.getElementById("tc-splash");
-    if (!el) return;
-    el.style.transition = "opacity 400ms ease";
-    el.style.opacity = "0";
-    el.style.pointerEvents = "none";
-    const t = setTimeout(() => el.remove(), 420);
-    return () => clearTimeout(t);
+    const fade = setTimeout(() => setFading(true), 300);
+    const remove = setTimeout(() => setVisible(false), 700);
+    return () => {
+      clearTimeout(fade);
+      clearTimeout(remove);
+    };
   }, []);
 
-  return null;
+  if (!visible) return null;
+
+  return (
+    <div id="tc-splash" className={fading ? "tc-splash tc-splash--hidden" : "tc-splash"}>
+      <img src="/logo-wit.png" width={180} style={{ opacity: 0.95 }} alt="" />
+      <div className="tc-splash-dots">
+        <div className="tc-splash-dot" />
+        <div className="tc-splash-dot" style={{ animationDelay: ".2s" }} />
+        <div className="tc-splash-dot" style={{ animationDelay: ".4s" }} />
+      </div>
+    </div>
+  );
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { valideerWachtwoord } from "@/lib/wachtwoord";
+import { logAudit, getClientIp } from "@/lib/audit";
 import bcrypt from "bcryptjs";
 
 export async function PUT(req: NextRequest) {
@@ -26,13 +27,19 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: fout }, { status: 400 });
     }
     const user = await prisma.user.findUnique({ where: { id: session.user.id } });
-    const klopt = user && await bcrypt.compare(huidigWachtwoord, user.password);
+    const klopt = user?.password && await bcrypt.compare(huidigWachtwoord, user.password);
     if (!klopt) {
       return NextResponse.json({ error: "Huidig wachtwoord is onjuist." }, { status: 400 });
     }
     data.password = await bcrypt.hash(nieuwWachtwoord, 12);
+    data.wachtwoordGewijzigdOp = new Date();
   }
 
   const user = await prisma.user.update({ where: { id: session.user.id }, data });
+
+  if (nieuwWachtwoord) {
+    await logAudit({ actie: "WACHTWOORD_GEWIJZIGD", userId: user.id, ip: getClientIp(req) });
+  }
+
   return NextResponse.json({ name: user.name });
 }

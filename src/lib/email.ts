@@ -23,7 +23,30 @@ export async function verstuurWachtwoordResetMail(email: string, resetUrl: strin
             Wachtwoord instellen
           </a>
         </p>
-        <p>Deze link is 1 uur geldig. Heb je dit niet aangevraagd? Dan kun je deze e-mail negeren.</p>
+        <p>Deze link is 30 minuten geldig. Heb je dit niet aangevraagd? Dan kun je deze e-mail negeren.</p>
+      </div>
+    `,
+  });
+}
+
+export async function verstuurUitnodigingsMail(email: string, naam: string, uitnodigingsUrl: string) {
+  const resend = getResend();
+  const from = process.env.EMAIL_FROM || "onboarding@resend.dev";
+
+  await resend.emails.send({
+    from: `Telecombinatie Toolbox <${from}>`,
+    to: email,
+    subject: "Welkom bij de Telecombinatie Toolbox",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+        <h2 style="color: #840562;">Welkom, ${naam}</h2>
+        <p>Er is een account voor je aangemaakt in de Telecombinatie Toolbox. Stel hieronder je eigen wachtwoord in om aan de slag te gaan.</p>
+        <p>
+          <a href="${uitnodigingsUrl}" style="display: inline-block; background: #840562; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-weight: bold;">
+            Wachtwoord instellen
+          </a>
+        </p>
+        <p>Deze link is 48 uur geldig. Heb je geen account verwacht? Dan kun je deze e-mail negeren.</p>
       </div>
     `,
   });

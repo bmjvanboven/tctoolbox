@@ -24,7 +24,11 @@ export default function LoginPage() {
     const result = await signIn("credentials", { email, password, redirect: false });
 
     if (result?.error) {
-      setError("Ongeldig e-mailadres of wachtwoord.");
+      setError(
+        result.code === "account-locked"
+          ? "Te veel mislukte inlogpogingen. Probeer het over 15 minuten opnieuw."
+          : "Ongeldig e-mailadres of wachtwoord."
+      );
       setLoading(false);
     } else {
       router.push("/");

@@ -4,22 +4,24 @@ import { useState } from "react";
 import type { User } from "@prisma/client";
 import GebruikerFormulier from "./GebruikerFormulier";
 
+export type GebruikerRij = Omit<User, "password"> & { heeftWachtwoord: boolean };
+
 const rolLabels: Record<string, string> = {
   ADMIN: "Admin",
   SHOPMEDEWERKER: "Shopmedewerker",
   RETENTIEMEDEWERKER: "Retentiemedewerker",
 };
 
-export default function GebruikersTable({ gebruikers }: { gebruikers: User[] }) {
+export default function GebruikersTable({ gebruikers }: { gebruikers: GebruikerRij[] }) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<User | null>(null);
+  const [selected, setSelected] = useState<GebruikerRij | null>(null);
 
   function handleNieuw() {
     setSelected(null);
     setOpen(true);
   }
 
-  function handleBewerk(user: User) {
+  function handleBewerk(user: GebruikerRij) {
     setSelected(user);
     setOpen(true);
   }
@@ -58,9 +60,15 @@ export default function GebruikersTable({ gebruikers }: { gebruikers: User[] }) 
                   </span>
                 </td>
                 <td className="px-5 py-3">
-                  <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${user.active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                    {user.active ? "Actief" : "Inactief"}
-                  </span>
+                  {!user.heeftWachtwoord ? (
+                    <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+                      Uitnodiging verstuurd
+                    </span>
+                  ) : (
+                    <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${user.active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                      {user.active ? "Actief" : "Inactief"}
+                    </span>
+                  )}
                 </td>
                 <td className="px-5 py-3 text-right">
                   <button

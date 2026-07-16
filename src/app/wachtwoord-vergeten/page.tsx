@@ -46,7 +46,7 @@ export default function WachtwoordVergetenPage() {
             <CheckCircle2 size={32} className="mx-auto text-green-600 mb-3" />
             <h1 className="text-lg font-bold text-gray-900 mb-2">Check je inbox</h1>
             <p className="text-sm text-gray-500 leading-relaxed">
-              Als <span className="font-medium text-gray-700">{email}</span> bekend is bij ons, ontvang je binnen enkele minuten een e-mail met een link om je wachtwoord te resetten. De link is 1 uur geldig.
+              Als <span className="font-medium text-gray-700">{email}</span> bekend is bij ons, ontvang je binnen enkele minuten een e-mail met een link om je wachtwoord te resetten. De link is 30 minuten geldig.
             </p>
           </div>
         ) : (

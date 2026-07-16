@@ -18,12 +18,15 @@ model User {
   achternaam   String           @default("")
   name         String
   email        String           @unique
-  password     String
+  password     String?
   role         Role             @default(SHOPMEDEWERKER)
   active       Boolean          @default(true)
   locatie      String?
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
+  mislukteInlogpogingen Int      @default(0)
+  inlogGeblokkeerdTot   DateTime?
+  wachtwoordGewijzigdOp DateTime @default(now())
   meldingen       Melding[]        @relation("MeldingVan")
   gelezen         MeldingGelezen[]
   pushSubscripties PushSubscriptie[]
@@ -37,6 +40,7 @@ model User {
   marketingAanvragen  MarketingAanvraag[]  @relation("MarketingAanvrager")
   marketingGezien     MarketingGezien[]
   wachtwoordResets    WachtwoordResetToken[]
+  auditLogs           AuditLog[]
 }
 
 model WachtwoordResetToken {
@@ -48,6 +52,21 @@ model WachtwoordResetToken {
   gebruiktOp DateTime?
   aangemaakt DateTime @default(now())
 
+  @@index([userId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actie      String
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId     String?
+  email      String?
+  ip         String?
+  detail     String?
+  aangemaakt DateTime @default(now())
+
+  @@index([actie, aangemaakt])
+  @@index([ip, actie, aangemaakt])
   @@index([userId])
 }
 

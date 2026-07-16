@@ -164,6 +164,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
               { href: "/admin/tools/snelkeuzes", label: "Snelkeuzes" },
               { href: "/admin/tools/reparatieprijzen", label: "Reparatieprijzen" },
               { href: "/admin/tools/verkoopprijzen", label: "Verkoopprijzen" },
+              { href: "/admin/audit-log", label: "Audit log" },
             ].map(item => (
               <Link key={item.href} href={item.href} onClick={onNavigate}
                 className={linkClass(pathname === item.href)}>

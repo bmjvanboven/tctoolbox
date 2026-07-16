@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { User } from "@prisma/client";
 import { WACHTWOORD_EISEN, valideerWachtwoord } from "@/lib/wachtwoord";
+import type { GebruikerRij } from "./GebruikersTable";
 
 interface Props {
-  gebruiker: User | null;
+  gebruiker: GebruikerRij | null;
   onClose: () => void;
 }
 
@@ -18,16 +18,22 @@ export default function GebruikerFormulier({ gebruiker, onClose }: Props) {
   const [achternaam, setAchternaam] = useState(gebruiker?.achternaam ?? "");
   const [email, setEmail] = useState(gebruiker?.email ?? "");
   const [password, setPassword] = useState("");
+  const [wachtwoordModus, setWachtwoordModus] = useState<"uitnodigen" | "handmatig">("uitnodigen");
   const [role, setRole] = useState(gebruiker?.role ?? "SHOPMEDEWERKER");
   const [active, setActive] = useState(gebruiker?.active ?? true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
+  const [uitnodigenBezig, setUitnodigenBezig] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setInfo("");
 
-    if (password) {
+    const moetWachtwoordValideren = gebruiker ? !!password : wachtwoordModus === "handmatig";
+
+    if (moetWachtwoordValideren) {
       const wwFout = valideerWachtwoord(password);
       if (wwFout) {
         setError(wwFout);
@@ -40,7 +46,7 @@ export default function GebruikerFormulier({ gebruiker, onClose }: Props) {
     const name = `${voornaam.trim()} ${achternaam.trim()}`.trim();
     const body = gebruiker
       ? { id: gebruiker.id, voornaam, achternaam, name, email, role, active, ...(password ? { password } : {}) }
-      : { voornaam, achternaam, name, email, password, role, active };
+      : { voornaam, achternaam, name, email, role, active, ...(wachtwoordModus === "handmatig" ? { password } : {}) };
 
     const res = await fetch("/api/admin/gebruikers", {
       method: gebruiker ? "PUT" : "POST",
@@ -55,6 +61,14 @@ export default function GebruikerFormulier({ gebruiker, onClose }: Props) {
       return;
     }
 
+    const data = await res.json();
+    if (data.uitnodigingMislukt) {
+      setLoading(false);
+      setError("Gebruiker is aangemaakt, maar de uitnodigingsmail kon niet worden verstuurd. Gebruik 'Uitnodiging opnieuw versturen' via bewerken.");
+      router.refresh();
+      return;
+    }
+
     router.refresh();
     onClose();
   }
@@ -64,6 +78,29 @@ export default function GebruikerFormulier({ gebruiker, onClose }: Props) {
     await fetch(`/api/admin/gebruikers?id=${gebruiker.id}`, { method: "DELETE" });
     router.refresh();
     onClose();
+  }
+
+  async function handleUitnodigingVersturen() {
+    if (!gebruiker) return;
+    setError("");
+    setInfo("");
+    setUitnodigenBezig(true);
+
+    const res = await fetch("/api/admin/gebruikers/uitnodigen", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: gebruiker.id }),
+    });
+
+    setUitnodigenBezig(false);
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setError(data.error ?? "Versturen is mislukt.");
+      return;
+    }
+
+    setInfo("Uitnodiging opnieuw verstuurd.");
   }
 
   return (
@@ -90,17 +127,49 @@ export default function GebruikerFormulier({ gebruiker, onClose }: Props) {
             <input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClass} />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Wachtwoord {gebruiker && <span className="text-gray-400 font-normal">(leeg = niet wijzigen)</span>}
-            </label>
-            <input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required={!gebruiker} className={inputClass} />
-            <ul className="text-xs text-gray-400 space-y-0.5 mt-1.5">
-              {WACHTWOORD_EISEN.map((eis) => (
-                <li key={eis}>• {eis}</li>
-              ))}
-            </ul>
-          </div>
+          {!gebruiker && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Wachtwoord</label>
+              <div className="flex flex-col gap-1.5 text-sm">
+                <label className="flex items-center gap-2">
+                  <input type="radio" name="wachtwoordModus" checked={wachtwoordModus === "uitnodigen"} onChange={() => setWachtwoordModus("uitnodigen")} className="accent-[#840562]" />
+                  Uitnodiging versturen (gebruiker stelt zelf wachtwoord in)
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="radio" name="wachtwoordModus" checked={wachtwoordModus === "handmatig"} onChange={() => setWachtwoordModus("handmatig")} className="accent-[#840562]" />
+                  Zelf een wachtwoord instellen
+                </label>
+              </div>
+            </div>
+          )}
+
+          {(gebruiker || wachtwoordModus === "handmatig") && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Wachtwoord {gebruiker && <span className="text-gray-400 font-normal">(leeg = niet wijzigen)</span>}
+              </label>
+              <input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required={!gebruiker} className={inputClass} />
+              <ul className="text-xs text-gray-400 space-y-0.5 mt-1.5">
+                {WACHTWOORD_EISEN.map((eis) => (
+                  <li key={eis}>• {eis}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {gebruiker && !gebruiker.heeftWachtwoord && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2.5">
+              <p className="text-sm text-amber-800">Deze gebruiker heeft de uitnodiging nog niet geaccepteerd.</p>
+              <button
+                type="button"
+                onClick={handleUitnodigingVersturen}
+                disabled={uitnodigenBezig}
+                className="mt-1.5 text-sm font-medium text-[#840562] hover:underline disabled:opacity-60"
+              >
+                {uitnodigenBezig ? "Versturen…" : "Uitnodiging opnieuw versturen"}
+              </button>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Rol</label>
@@ -116,6 +185,7 @@ export default function GebruikerFormulier({ gebruiker, onClose }: Props) {
             <label htmlFor="active" className="text-sm text-gray-700">Actief</label>
           </div>
 
+          {info && <p className="text-sm text-green-700 bg-green-50 rounded-lg px-3 py-2">{info}</p>}
           {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
 
           <div className="flex gap-3 pt-2">

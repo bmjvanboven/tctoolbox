@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { valideerWachtwoord } from "@/lib/wachtwoord";
+import { logAudit, getClientIp } from "@/lib/audit";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
@@ -33,9 +34,19 @@ export async function POST(req: NextRequest) {
   const hashed = await bcrypt.hash(wachtwoord, 12);
 
   await prisma.$transaction([
-    prisma.user.update({ where: { id: resetToken.userId }, data: { password: hashed } }),
+    prisma.user.update({
+      where: { id: resetToken.userId },
+      data: {
+        password: hashed,
+        wachtwoordGewijzigdOp: new Date(),
+        mislukteInlogpogingen: 0,
+        inlogGeblokkeerdTot: null,
+      },
+    }),
     prisma.wachtwoordResetToken.update({ where: { id: resetToken.id }, data: { gebruiktOp: new Date() } }),
   ]);
+
+  await logAudit({ actie: "WACHTWOORD_GERESET", userId: resetToken.userId, ip: getClientIp(req) });
 
   return NextResponse.json({ message: "Wachtwoord is bijgewerkt." });
 }

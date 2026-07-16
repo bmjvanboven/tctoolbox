@@ -95,6 +95,10 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           Documenten
         </Link>
 
+        <Link href="/nieuws" onClick={onNavigate} className={linkClass(pathname === "/nieuws")}>
+          Nieuws
+        </Link>
+
         <Link
           href="/marketing"
           onClick={onNavigate}

@@ -1,9 +1,10 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { haalBrancheNieuwsOp, BRON_KLEUR } from "@/lib/branchenieuws";
 import Link from "next/link";
 import {
   ClipboardList, Phone, Users, Smartphone, Wrench,
-  Zap, CalendarClock, CheckSquare, Bell, StickyNote, ArrowRight, ChevronRight,
+  Zap, CalendarClock, CheckSquare, Bell, StickyNote, ArrowRight, ChevronRight, Rss,
 } from "lucide-react";
 
 const tools = [
@@ -83,7 +84,7 @@ export default async function HomePage() {
   const session = await auth();
   const userId = session!.user.id;
 
-  const [user, openTaken, ongelezen, recenteNotities, urgenteTaken] = await Promise.all([
+  const [user, openTaken, ongelezen, recenteNotities, urgenteTaken, brancheNieuws] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId } }),
     prisma.taak.count({ where: { toegewezenAanId: userId, afgerond: false } }),
     prisma.melding.count({
@@ -108,6 +109,7 @@ export default async function HomePage() {
       take: 3,
       select: { id: true, titel: true, locatie: true, verloopdatum: true },
     }),
+    haalBrancheNieuwsOp(3, 6),
   ]);
 
   const voornaam = user?.voornaam || session?.user.name?.split(" ")[0] || "";
@@ -241,6 +243,45 @@ export default async function HomePage() {
           })}
         </div>
       </div>
+
+      {/* Branchenieuws */}
+      {brancheNieuws.length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-50">
+            <div className="flex items-center gap-2">
+              <Rss size={14} className="text-gray-400" />
+              <h3 className="text-sm font-semibold text-gray-700">Branchenieuws</h3>
+            </div>
+            <Link href="/nieuws" className="text-xs text-[#840562] hover:underline flex items-center gap-0.5">
+              Alles <ChevronRight size={12} />
+            </Link>
+          </div>
+          <ul className="divide-y divide-gray-50">
+            {brancheNieuws.map((item) => (
+              <li key={item.url}>
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors"
+                >
+                  <span className="w-20 shrink-0">
+                    <span className={`inline-block text-xs px-2 py-0.5 rounded-full ${BRON_KLEUR[item.bron] ?? "bg-gray-100 text-gray-500"}`}>
+                      {item.bron}
+                    </span>
+                  </span>
+                  <span className="text-sm text-gray-700 flex-1 truncate">{item.titel}</span>
+                  {item.datum && (
+                    <span className="text-xs text-gray-400 shrink-0">
+                      {new Date(item.datum).toLocaleDateString("nl-NL", { day: "numeric", month: "short" })}
+                    </span>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

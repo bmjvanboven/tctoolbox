@@ -19,6 +19,7 @@ const routeLabels: Record<string, string> = {
   "/admin/tools/reparatieprijzen": "Reparatieprijzen beheren",
   "/admin/tools/verkoopprijzen": "Verkoopprijzen beheren",
   "/documenten": "Documenten",
+  "/nieuws": "Branchenieuws",
   "/taken": "Taken",
   "/instellingen": "Instellingen",
 };

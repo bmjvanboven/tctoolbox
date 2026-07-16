@@ -4,7 +4,13 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const csp = [
   "default-src 'self'",
-  `script-src 'self'${isDev ? " 'unsafe-eval' 'unsafe-inline'" : ""}`,
+  // 'unsafe-inline' is nodig omdat Next.js zelf inline <script>-tags
+  // gebruikt om server-gestreamde hydratiedata door te geven aan de
+  // client (self.__next_f.push(...)) op zowel statische als dynamische
+  // pagina's. Een nonce-gebaseerde CSP zou dit netter oplossen, maar
+  // vereist dat alle pagina's dynamisch gerenderd worden (zie
+  // node_modules/next/dist/docs/01-app/02-guides/content-security-policy.md).
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com",
   "font-src 'self' data:",

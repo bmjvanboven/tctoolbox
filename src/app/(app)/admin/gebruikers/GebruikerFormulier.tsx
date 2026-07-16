@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@prisma/client";
+import { WACHTWOORD_EISEN, valideerWachtwoord } from "@/lib/wachtwoord";
 
 interface Props {
   gebruiker: User | null;
@@ -24,8 +25,17 @@ export default function GebruikerFormulier({ gebruiker, onClose }: Props) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (password) {
+      const wwFout = valideerWachtwoord(password);
+      if (wwFout) {
+        setError(wwFout);
+        return;
+      }
+    }
+
+    setLoading(true);
 
     const name = `${voornaam.trim()} ${achternaam.trim()}`.trim();
     const body = gebruiker
@@ -77,14 +87,19 @@ export default function GebruikerFormulier({ gebruiker, onClose }: Props) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClass} />
+            <input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClass} />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Wachtwoord {gebruiker && <span className="text-gray-400 font-normal">(leeg = niet wijzigen)</span>}
             </label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required={!gebruiker} className={inputClass} />
+            <input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required={!gebruiker} className={inputClass} />
+            <ul className="text-xs text-gray-400 space-y-0.5 mt-1.5">
+              {WACHTWOORD_EISEN.map((eis) => (
+                <li key={eis}>• {eis}</li>
+              ))}
+            </ul>
           </div>
 
           <div>

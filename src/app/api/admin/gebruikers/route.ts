@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { valideerWachtwoord } from "@/lib/wachtwoord";
 import bcrypt from "bcryptjs";
 
 async function requireAdmin() {
@@ -19,6 +20,11 @@ export async function POST(req: NextRequest) {
 
   if (!voornaam || !email || !password || !role) {
     return NextResponse.json({ error: "Vul alle velden in." }, { status: 400 });
+  }
+
+  const wwFout = valideerWachtwoord(password);
+  if (wwFout) {
+    return NextResponse.json({ error: wwFout }, { status: 400 });
   }
 
   const bestaat = await prisma.user.findUnique({ where: { email } });
@@ -43,7 +49,13 @@ export async function PUT(req: NextRequest) {
   if (!id) return NextResponse.json({ error: "Geen ID opgegeven." }, { status: 400 });
 
   const data: Record<string, unknown> = { voornaam, achternaam, name, email, role, active };
-  if (password) data.password = await bcrypt.hash(password, 12);
+  if (password) {
+    const wwFout = valideerWachtwoord(password);
+    if (wwFout) {
+      return NextResponse.json({ error: wwFout }, { status: 400 });
+    }
+    data.password = await bcrypt.hash(password, 12);
+  }
 
   const user = await prisma.user.update({ where: { id }, data });
   return NextResponse.json(user);

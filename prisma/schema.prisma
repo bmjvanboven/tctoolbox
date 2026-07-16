@@ -36,6 +36,19 @@ model User {
   marketingAangemaakt MarketingMateriaal[] @relation("MarketingAangemaakt")
   marketingAanvragen  MarketingAanvraag[]  @relation("MarketingAanvrager")
   marketingGezien     MarketingGezien[]
+  wachtwoordResets    WachtwoordResetToken[]
+}
+
+model WachtwoordResetToken {
+  id         String   @id @default(cuid())
+  tokenHash  String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  verlooptOp DateTime
+  gebruiktOp DateTime?
+  aangemaakt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model SnelkeuzeGroep {

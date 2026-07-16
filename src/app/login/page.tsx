@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import logoWit from "../../../public/logo-wit.png";
@@ -128,9 +129,14 @@ export default function LoginPage() {
 
             {/* Wachtwoord */}
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-                Wachtwoord
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  Wachtwoord
+                </label>
+                <Link href="/wachtwoord-vergeten" className="text-xs font-medium text-[#840562] hover:underline">
+                  Wachtwoord vergeten?
+                </Link>
+              </div>
               <div className="relative">
                 <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input

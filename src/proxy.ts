@@ -7,13 +7,17 @@ export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!session;
   const isLoginPage = pathname === "/login";
+  const isPublicePage =
+    isLoginPage ||
+    pathname === "/wachtwoord-vergeten" ||
+    pathname === "/wachtwoord-resetten";
   const isAdminRoute = pathname.startsWith("/admin");
 
-  if (!isLoggedIn && !isLoginPage) {
+  if (!isLoggedIn && !isPublicePage) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  if (isLoggedIn && isLoginPage) {
+  if (isLoggedIn && isPublicePage) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 

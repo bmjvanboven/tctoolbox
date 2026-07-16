@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { valideerWachtwoord } from "@/lib/wachtwoord";
 import bcrypt from "bcryptjs";
 
 export async function PUT(req: NextRequest) {
@@ -19,6 +20,10 @@ export async function PUT(req: NextRequest) {
   if (nieuwWachtwoord) {
     if (!huidigWachtwoord) {
       return NextResponse.json({ error: "Vul je huidige wachtwoord in." }, { status: 400 });
+    }
+    const fout = valideerWachtwoord(nieuwWachtwoord);
+    if (fout) {
+      return NextResponse.json({ error: fout }, { status: 400 });
     }
     const user = await prisma.user.findUnique({ where: { id: session.user.id } });
     const klopt = user && await bcrypt.compare(huidigWachtwoord, user.password);

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
+import { WACHTWOORD_EISEN, valideerWachtwoord } from "@/lib/wachtwoord";
 
 const inputClass = "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#840562] bg-white";
 
@@ -30,9 +31,12 @@ export default function InstellingenForm({ user }: Props) {
       setError("Nieuwe wachtwoorden komen niet overeen.");
       return;
     }
-    if (nieuwWachtwoord && nieuwWachtwoord.length < 8) {
-      setError("Nieuw wachtwoord moet minimaal 8 tekens zijn.");
-      return;
+    if (nieuwWachtwoord) {
+      const fout = valideerWachtwoord(nieuwWachtwoord);
+      if (fout) {
+        setError(fout);
+        return;
+      }
     }
 
     setLoading(true);
@@ -94,16 +98,21 @@ export default function InstellingenForm({ user }: Props) {
         <div className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Huidig wachtwoord</label>
-            <input type="password" value={huidigWachtwoord} onChange={(e) => setHuidigWachtwoord(e.target.value)} className={inputClass} placeholder="••••••••" />
+            <input type="password" autoComplete="current-password" value={huidigWachtwoord} onChange={(e) => setHuidigWachtwoord(e.target.value)} className={inputClass} placeholder="••••••••" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Nieuw wachtwoord</label>
-            <input type="password" value={nieuwWachtwoord} onChange={(e) => setNieuwWachtwoord(e.target.value)} className={inputClass} placeholder="••••••••" />
+            <input type="password" autoComplete="new-password" value={nieuwWachtwoord} onChange={(e) => setNieuwWachtwoord(e.target.value)} className={inputClass} placeholder="••••••••" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Bevestig nieuw wachtwoord</label>
-            <input type="password" value={bevestigWachtwoord} onChange={(e) => setBevestigWachtwoord(e.target.value)} className={inputClass} placeholder="••••••••" />
+            <input type="password" autoComplete="new-password" value={bevestigWachtwoord} onChange={(e) => setBevestigWachtwoord(e.target.value)} className={inputClass} placeholder="••••••••" />
           </div>
+          <ul className="text-xs text-gray-400 space-y-0.5 pt-1">
+            {WACHTWOORD_EISEN.map((eis) => (
+              <li key={eis}>• {eis}</li>
+            ))}
+          </ul>
         </div>
       </div>
 

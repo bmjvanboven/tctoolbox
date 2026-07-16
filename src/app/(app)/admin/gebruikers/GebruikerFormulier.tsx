@@ -177,6 +177,7 @@ export default function GebruikerFormulier({ gebruiker, onClose }: Props) {
               <option value="ADMIN">Admin</option>
               <option value="SHOPMEDEWERKER">Shopmedewerker</option>
               <option value="RETENTIEMEDEWERKER">Retentiemedewerker</option>
+              <option value="REPARATIESPECIALIST">Reparatiespecialist</option>
             </select>
           </div>
 

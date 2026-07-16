@@ -26,6 +26,7 @@ const TYPES: { value: string; label: string; icon: React.ReactNode; kleur: strin
 
 const ROL_LABELS: Record<string, string> = {
   ADMIN: "Admins", SHOPMEDEWERKER: "Shopmedewerkers", RETENTIEMEDEWERKER: "Retentiemedewerkers",
+  REPARATIESPECIALIST: "Reparatiespecialisten",
 };
 
 function getTypeMeta(type: string) {

@@ -73,6 +73,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const isAdmin = session?.user.role === "ADMIN";
+  const magPrijzenBeheren = isAdmin || session?.user.role === "REPARATIESPECIALIST";
   const takenCount = useTakenCount();
   const marketingCount = useMarketingCount();
 
@@ -148,23 +149,25 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           );
         })}
 
-        {isAdmin && (
+        {magPrijzenBeheren && (
           <>
             <p className="text-xs font-semibold text-purple-300 uppercase tracking-wider px-2 mt-6 mb-2">
               Beheer
             </p>
-            <Link
-              href="/admin/gebruikers"
-              onClick={onNavigate}
-              className={linkClass(pathname.startsWith("/admin/gebruikers"))}
-            >
-              Gebruikers
-            </Link>
+            {isAdmin && (
+              <Link
+                href="/admin/gebruikers"
+                onClick={onNavigate}
+                className={linkClass(pathname.startsWith("/admin/gebruikers"))}
+              >
+                Gebruikers
+              </Link>
+            )}
             {[
-              { href: "/admin/tools/snelkeuzes", label: "Snelkeuzes" },
+              ...(isAdmin ? [{ href: "/admin/tools/snelkeuzes", label: "Snelkeuzes" }] : []),
               { href: "/admin/tools/reparatieprijzen", label: "Reparatieprijzen" },
               { href: "/admin/tools/verkoopprijzen", label: "Verkoopprijzen" },
-              { href: "/admin/audit-log", label: "Audit log" },
+              ...(isAdmin ? [{ href: "/admin/audit-log", label: "Audit log" }] : []),
             ].map(item => (
               <Link key={item.href} href={item.href} onClick={onNavigate}
                 className={linkClass(pathname === item.href)}>

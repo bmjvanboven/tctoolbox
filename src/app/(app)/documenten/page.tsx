@@ -34,6 +34,7 @@ const TOEGANG_OPTIES = [
   { value: "ADMIN", label: "Alleen admins", icon: <Shield size={13} /> },
   { value: "ROL:SHOPMEDEWERKER", label: "Shopmedewerkers", icon: <Lock size={13} /> },
   { value: "ROL:RETENTIEMEDEWERKER", label: "Retentiemedewerkers", icon: <Lock size={13} /> },
+  { value: "ROL:REPARATIESPECIALIST", label: "Reparatiespecialisten", icon: <Lock size={13} /> },
 ];
 
 function bestandsgrootte(bytes: number) {

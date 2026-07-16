@@ -12,6 +12,9 @@ export async function proxy(req: NextRequest) {
     pathname === "/wachtwoord-vergeten" ||
     pathname === "/wachtwoord-resetten";
   const isAdminRoute = pathname.startsWith("/admin");
+  const isPrijsbeheerRoute =
+    pathname.startsWith("/admin/tools/reparatieprijzen") ||
+    pathname.startsWith("/admin/tools/verkoopprijzen");
 
   if (!isLoggedIn && !isPublicePage) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
@@ -22,7 +25,10 @@ export async function proxy(req: NextRequest) {
   }
 
   if (isAdminRoute && session?.user.role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/", req.nextUrl));
+    const magAlsPrijsbeheerder = isPrijsbeheerRoute && session?.user.role === "REPARATIESPECIALIST";
+    if (!magAlsPrijsbeheerder) {
+      return NextResponse.redirect(new URL("/", req.nextUrl));
+    }
   }
 
   return NextResponse.next();

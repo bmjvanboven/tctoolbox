@@ -1,7 +1,14 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import VerkoopPrijzenBeheer from "./VerkoopPrijzenBeheer";
 
 export default async function VerkoopPrijzenAdminPage() {
+  const session = await auth();
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "REPARATIESPECIALIST")) {
+    redirect("/");
+  }
+
   const modellen = await prisma.verkoopModel.findMany({
     orderBy: { volgorde: "asc" },
     include: { prijzen: { orderBy: [{ gb: "asc" }, { grade: "asc" }] } },

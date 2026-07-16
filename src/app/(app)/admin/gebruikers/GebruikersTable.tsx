@@ -10,6 +10,7 @@ const rolLabels: Record<string, string> = {
   ADMIN: "Admin",
   SHOPMEDEWERKER: "Shopmedewerker",
   RETENTIEMEDEWERKER: "Retentiemedewerker",
+  REPARATIESPECIALIST: "Reparatiespecialist",
 };
 
 export default function GebruikersTable({ gebruikers }: { gebruikers: GebruikerRij[] }) {

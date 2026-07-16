@@ -1,7 +1,14 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import ReparatiePrijzenBeheer from "./ReparatiePrijzenBeheer";
 
 export default async function ReparatiePrijzenAdminPage() {
+  const session = await auth();
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "REPARATIESPECIALIST")) {
+    redirect("/");
+  }
+
   const merken = await prisma.reparatieMerk.findMany({
     orderBy: { volgorde: "asc" },
     include: {

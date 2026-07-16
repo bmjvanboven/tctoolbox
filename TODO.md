@@ -7,6 +7,14 @@
 
 ## Backlog
 
+### Nieuws & Communicatie
+
+- [ ] **Nieuwsoverzicht / updates** — intern nieuwskanaal waar management updates plaatst
+  - Berichten met titel, tekst, optionele afbeelding en categorie (bijv. "Actie", "Systeem", "Algemeen")
+  - Badge in sidebar voor ongelezen berichten (zelfde patroon als marketing)
+  - Reacties of bevestiging ("gelezen") per medewerker mogelijk
+  - Gericht sturen per rol of filiaal
+
 ### Marketing & Communicatie
 
 - [x] **Marketingbibliotheek** — overzicht van gemaakte marketingmaterialen (cadeaubonnen, flyers, acties) per filiaal
@@ -19,13 +27,15 @@
 
 - [ ] **Voorraad / toestelbeheer** — refurbished toestellen en status volgen na inname
 - [ ] **Kassabon / offerte generator** — PDF genereren voor klanten
-- [ ] **Klachtenregistratie** — klachten of terugkeerbezoeken bijhouden
+- [ ] **Klachtenregistratie** — klachten of terugkeerbezoeken bijhouden per vestiging
+- [ ] **Verkooptargets** — maand- of weektargets instellen en voortgang bijhouden per vestiging
 
 ### Platform / UX
 
-- [ ] **Globale zoekfunctie** — zoeken door taken, documenten, notities
+- [ ] **Globale zoekfunctie** — zoeken door taken, documenten, notities en nieuws
 - [ ] **Bulk acties in taken** — meerdere taken tegelijk afronden of verwijderen
 - [ ] **Dashboard statistieken** — overzicht voor managers per vestiging
+- [ ] **Personeelsrooster** — beschikbaarheid en shifts per vestiging bijhouden
 
 ## Technisch
 

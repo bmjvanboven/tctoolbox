@@ -253,19 +253,17 @@ export default function TakenPage() {
   return (
     <div className="max-w-3xl space-y-5">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex gap-1 bg-gray-100 rounded-xl p-1">
-            {([["open", `Open (${aantalOpen})`], ["afgerond", `Afgerond (${aantalAfgerond})`], ["alles", "Alles"]] as const).map(([v, l]) => (
-              <button key={v} onClick={() => setFilter(v)}
-                className={`px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-colors ${filter === v ? "bg-white text-gray-800 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}>
-                {l}
-              </button>
-            ))}
-          </div>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex gap-1 bg-gray-100 rounded-xl p-1">
+          {([["open", `Open (${aantalOpen})`], ["afgerond", `Afgerond (${aantalAfgerond})`], ["alles", "Alles"]] as const).map(([v, l]) => (
+            <button key={v} onClick={() => setFilter(v)}
+              className={`flex-1 px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-colors ${filter === v ? "bg-white text-gray-800 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}>
+              {l}
+            </button>
+          ))}
         </div>
         <button onClick={() => { setShowForm(true); setBewerkTaak(null); }}
-          className="flex items-center gap-2 bg-[#840562] hover:bg-[#6d044f] text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition-colors">
+          className="flex items-center justify-center gap-2 bg-[#840562] hover:bg-[#6d044f] text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition-colors w-full sm:w-auto">
           <Plus size={16} /> Nieuwe taak
         </button>
       </div>

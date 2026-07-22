@@ -498,14 +498,23 @@ function tctb_reparatieprijzen_css_js() {
 			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 		}
 
+		/*
+		 * Sommige thema's (o.a. Material-stijl formulieren) tekenen bij focus geen
+		 * outline/box-shadow maar een gekleurde streep via background-image op een
+		 * voorouder-element met de klasse "is-focused" (bijv. .form-group.is-focused
+		 * .form-control). Dat is niet via outline/box-shadow te stoppen — daarom hier
+		 * expliciet background(-image) resetten, altijd én op :focus.
+		 */
 		.tctb-reparatieprijzen .tctb-zoek {
-			all: unset; box-sizing: border-box; display: block; width: 100%; background: #fff; color: #222;
+			all: unset; box-sizing: border-box; display: block; width: 100%; color: #222;
 			padding: 12px 16px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px;
 			outline: none; box-shadow: none; -webkit-appearance: none; appearance: none;
+			background-color: #fff !important; background-image: none !important;
 		}
 		.tctb-reparatieprijzen .tctb-zoek:focus,
 		.tctb-reparatieprijzen .tctb-zoek:focus-visible {
 			outline: none !important; box-shadow: none !important; border-color: #840562 !important;
+			background-color: #fff !important; background-image: none !important;
 		}
 
 		.tctb-reparatieprijzen .tctb-tabs {
@@ -582,12 +591,14 @@ function tctb_reparatieprijzen_css_js() {
 			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 		}
 		.tctb-zoekbalk .tctb-zb-input {
-			all: unset; box-sizing: border-box; display: block; width: 100%; background: #fff; color: #222;
+			all: unset; box-sizing: border-box; display: block; width: 100%; color: #222;
 			padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px;
 			outline: none; box-shadow: none; -webkit-appearance: none; appearance: none;
+			background-color: #fff !important; background-image: none !important;
 		}
 		.tctb-zoekbalk .tctb-zb-input:focus, .tctb-zoekbalk .tctb-zb-input:focus-visible {
 			outline: none !important; box-shadow: none !important; border-color: #840562 !important;
+			background-color: #fff !important; background-image: none !important;
 		}
 		.tctb-zoekbalk .tctb-zb-suggesties {
 			all: unset; position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0;

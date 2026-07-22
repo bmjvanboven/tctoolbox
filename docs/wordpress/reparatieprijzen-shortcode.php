@@ -53,6 +53,12 @@ define( 'TCTOOLBOX_API_URL', 'https://app.tctoolbox.nl/api/public/reparatieprijz
 // URL van de pagina waar [reparatieprijzen] op staat — de zoekbalk linkt hiernaartoe.
 define( 'TCTOOLBOX_TARIEVEN_URL', '/reparatieprijzen/' );
 
+// Hoelang de opgehaalde prijzen kort bewaard worden (in seconden) voordat de
+// eerstvolgende bezoeker ze opnieuw live ophaalt. Voorkomt dat elke
+// paginabezoeker moet wachten op de Toolbox-API; prijzen zijn hierdoor
+// hooguit dit aantal seconden oud in plaats van altijd live.
+define( 'TCTOOLBOX_CACHE_SECONDEN', 60 );
+
 // Toolbox-toestelsleutel -> slug van de bestaande productpagina op deze site.
 $GLOBALS['TCTOOLBOX_PRODUCT_SLUGS'] = array(
 	// Apple iPhone
@@ -167,6 +173,10 @@ add_shortcode( 'uitgelichte_toestellen', 'tctb_uitgelicht_shortcode' );
  * Haalt de reparatieprijzen-data op bij de Toolbox. Wordt maar één keer per
  * paginaverzoek echt opgehaald, ook als meerdere shortcodes op dezelfde
  * pagina staan (bijv. de zoekbalk + de uitgelichte toestellen).
+ *
+ * Gebruikt daarnaast een korte WordPress-transient (TCTOOLBOX_CACHE_SECONDEN)
+ * zodat niet elke paginabezoeker zelf hoeft te wachten op de Toolbox-API —
+ * prijzen zijn hierdoor hooguit dat aantal seconden oud i.p.v. altijd live.
  */
 function tctb_haal_data() {
 	static $opgehaald = false;
@@ -177,11 +187,17 @@ function tctb_haal_data() {
 	}
 	$opgehaald = true;
 
+	$cache_key = 'tctb_reparatieprijzen_data';
+	$gecached = get_transient( $cache_key );
+	if ( false !== $gecached ) {
+		$data = $gecached;
+		return $data;
+	}
+
 	if ( empty( TCTOOLBOX_API_KEY ) ) {
 		return null;
 	}
 
-	// Altijd live ophalen: geen caching, elk paginabezoek krijgt de actuele Toolbox-prijzen.
 	$response = wp_remote_get(
 		TCTOOLBOX_API_URL,
 		array(
@@ -200,6 +216,7 @@ function tctb_haal_data() {
 	}
 
 	$data = $json;
+	set_transient( $cache_key, $data, TCTOOLBOX_CACHE_SECONDEN );
 	return $data;
 }
 
@@ -615,6 +632,15 @@ function tctb_reparatieprijzen_css_js() {
 		.tctb-zoekbalk .tctb-zb-suggesties a:hover,
 		.tctb-zoekbalk .tctb-zb-suggesties a.tctb-zb-actief { background: #f9f0f6; color: #840562; }
 		.tctb-zoekbalk .tctb-zb-leeg { padding: 10px 16px; font-size: 14px; color: #888; }
+		.tctb-zoekbalk .tctb-zb-laden {
+			display: flex; align-items: center; gap: 10px; padding: 12px 16px; font-size: 14px; color: #840562;
+		}
+		.tctb-zoekbalk .tctb-zb-spinner {
+			width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+			border: 2px solid #f0d3e8; border-top-color: #840562;
+			animation: tctb-zb-draai .6s linear infinite;
+		}
+		@keyframes tctb-zb-draai { to { transform: rotate(360deg); } }
 	</style>
 	<script>
 	(function () {
@@ -727,6 +753,21 @@ function tctb_reparatieprijzen_css_js() {
 			try { toestellen = JSON.parse(dataTag.textContent); } catch (e) { toestellen = []; }
 
 			function naarToestel(toestel) {
+				// Meteen zichtbare laadstatus: de bestemmingspagina kan (bij een trage
+				// site/host) even nodig hebben, dus geef direct feedback dat de klik is
+				// aangekomen in plaats van dat de bezoeker naar een "bevroren" pagina kijkt.
+				input.disabled = true;
+				input.value = toestel.label;
+				lijst.innerHTML = '';
+				var laden = document.createElement('li');
+				laden.className = 'tctb-zb-laden';
+				var spinner = document.createElement('span');
+				spinner.className = 'tctb-zb-spinner';
+				laden.appendChild(spinner);
+				laden.appendChild(document.createTextNode(toestel.label + ' laden…'));
+				lijst.appendChild(laden);
+				lijst.hidden = false;
+
 				var url = <?php echo wp_json_encode( TCTOOLBOX_TARIEVEN_URL ); ?>;
 				var scheidingsteken = url.indexOf('?') === -1 ? '?' : '&';
 				window.location.href = url + scheidingsteken + 'tctb_toestel=' + encodeURIComponent(toestel.merk + '__' + toestel.model);

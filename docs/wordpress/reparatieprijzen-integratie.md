@@ -112,11 +112,20 @@ De shortcode toont dan een nette melding ("prijzen konden niet worden
 opgehaald, neem contact op") in plaats van een kapotte pagina of oude,
 foutieve prijzen.
 
+## Snelheid: korte cache + directe laadstatus
+
+De prijzen worden niet meer bij elk paginabezoek live opgehaald: sinds kort
+worden ze na ophalen `TCTOOLBOX_CACHE_SECONDEN` (standaard 60) seconden
+bewaard in een WordPress-transient. De eerste bezoeker na een wijziging
+wacht dus nog op de live Toolbox-API, iedereen daarna binnen die 60 seconden
+krijgt de pagina razendsnel uit de cache. Merkt de site dit nog steeds traag
+aan, verhoog dan gerust `TCTOOLBOX_CACHE_SECONDEN` (bijv. naar 300).
+
+Daarnaast toont de zoekbalk ([reparatie_zoekbalk]) meteen een spinner en
+"… laden" zodra je op een toestel klikt, zodat je direct ziet dat de klik is
+aangekomen — ook als de site of hosting even wat trager reageert.
+
 ## Wat dit (bewust) niet doet
 
 - Geen koppeling met de bestaande WooCommerce-productpagina's per toestel
   (die met eigen foto's) — dit is een aparte, centrale prijzenpagina.
-- Geen caching: elke paginabezoeker haalt de actuele prijzen live op. Merkt
-  de site trager aan bij veel bezoek, dan is een korte cache (bijv. 15
-  minuten via `set_transient`) later alsnog eenvoudig toe te voegen in
-  `tctb_reparatieprijzen_shortcode()`.

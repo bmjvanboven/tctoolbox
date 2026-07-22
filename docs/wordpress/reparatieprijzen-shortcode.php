@@ -214,7 +214,7 @@ function tctb_reparatieprijzen_shortcode( $atts ) {
 	?>
 	<div class="tctb-reparatieprijzen">
 		<input
-			type="search"
+			type="text"
 			class="tctb-zoek"
 			placeholder="Zoek je toestel, bijv. iPhone 13 of Galaxy S22…"
 			aria-label="Zoek je toestel"
@@ -288,7 +288,7 @@ function tctb_zoekbalk_shortcode( $atts ) {
 	?>
 	<div class="tctb-zoekbalk">
 		<input
-			type="search"
+			type="text"
 			class="tctb-zb-input"
 			placeholder="Zoek je toestel, bijv. iPhone 13 of Galaxy S22…"
 			aria-label="Zoek je toestel"
@@ -507,7 +507,6 @@ function tctb_reparatieprijzen_css_js() {
 		.tctb-reparatieprijzen .tctb-zoek:focus-visible {
 			outline: none !important; box-shadow: none !important; border-color: #840562 !important;
 		}
-		.tctb-reparatieprijzen .tctb-zoek::-webkit-search-cancel-button { -webkit-appearance: none; }
 
 		.tctb-reparatieprijzen .tctb-tabs {
 			display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; padding: 0 0 12px; border-bottom: 1px solid #e5e5e5;
@@ -579,7 +578,7 @@ function tctb_reparatieprijzen_css_js() {
 		/* [reparatie_zoekbalk] */
 		.tctb-zoekbalk, .tctb-zoekbalk * { box-sizing: border-box; }
 		.tctb-zoekbalk {
-			position: relative; width: 100%; max-width: 480px;
+			position: relative; width: 100%; max-width: 100%;
 			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 		}
 		.tctb-zoekbalk .tctb-zb-input {
@@ -590,7 +589,6 @@ function tctb_reparatieprijzen_css_js() {
 		.tctb-zoekbalk .tctb-zb-input:focus, .tctb-zoekbalk .tctb-zb-input:focus-visible {
 			outline: none !important; box-shadow: none !important; border-color: #840562 !important;
 		}
-		.tctb-zoekbalk .tctb-zb-input::-webkit-search-cancel-button { -webkit-appearance: none; }
 		.tctb-zoekbalk .tctb-zb-suggesties {
 			all: unset; position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0;
 			background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
@@ -746,7 +744,13 @@ function tctb_reparatieprijzen_css_js() {
 					var li = document.createElement('li');
 					var a = document.createElement('a');
 					a.textContent = toestel.label;
-					a.addEventListener('click', function () { naarToestel(toestel); });
+					// mousedown (i.p.v. click) + preventDefault: zo verliest het inputveld
+					// niet eerst de focus (waardoor de lijst al verdwenen zou zijn) vóórdat
+					// de klik wordt verwerkt.
+					a.addEventListener('mousedown', function (e) {
+						e.preventDefault();
+						naarToestel(toestel);
+					});
 					li.appendChild(a);
 					lijst.appendChild(li);
 				});
@@ -756,7 +760,7 @@ function tctb_reparatieprijzen_css_js() {
 			input.addEventListener('keydown', function (e) {
 				if (e.key === 'Enter') {
 					var eerste = lijst.querySelector('a');
-					if (eerste) { e.preventDefault(); eerste.click(); }
+					if (eerste) { e.preventDefault(); eerste.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true })); }
 				}
 			});
 

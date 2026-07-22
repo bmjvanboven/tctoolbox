@@ -10,15 +10,22 @@ handmatig hoeft over te typen.
    ([src/app/api/public/reparatieprijzen/route.ts](../../src/app/api/public/reparatieprijzen/route.ts)).
    Die geeft alle merken/toestellen/reparaties + prijzen terug als JSON, maar
    alleen als het verzoek de juiste geheime sleutel meestuurt (header `X-Api-Key`).
-2. Op reparatiedeurne.nl komt één shortcode-snippet
-   ([reparatieprijzen-shortcode.php](reparatieprijzen-shortcode.php)) die deze
-   API bij elk paginabezoek live uitleest en toont als tabs per merk met een
-   kaartjes-grid per toestel (met foto — zie hieronder), gegroepeerd per
-   generatie. Klik op een kaartje voor de prijzentabel in een popup. Zoeken
-   doorzoekt automatisch alle merken tegelijk.
-3. Plaats het shortcode `[reparatieprijzen]` op één centrale pagina (bijv. de
-   bestaande "Reparaties"/tarievenlijst-pagina) — geen aparte koppeling per
-   product nodig.
+2. Eén PHP-bestand ([reparatieprijzen-shortcode.php](reparatieprijzen-shortcode.php))
+   registreert drie shortcodes die allemaal dezelfde live data gebruiken:
+   - `[reparatieprijzen]` — de volledige prijzenlijst: tabs per merk met een
+     kaartjes-grid per toestel (met foto), gegroepeerd per generatie. Klik op
+     een kaartje voor de prijzentabel in een popup. Zoeken doorzoekt
+     automatisch alle merken tegelijk.
+   - `[reparatie_zoekbalk]` — compacte zoekbalk (bedoeld voor de homepage) die
+     live filtert op toestelnaam en bij een klik doorlinkt naar de
+     prijzenlijst-pagina met dat toestel meteen open.
+   - `[uitgelichte_toestellen]` — klein kaartjes-rijtje met een paar
+     handmatig gekozen toestellen (bedoeld voor de homepage), zelfde stijl en
+     popup als de prijzenlijst.
+3. Plaats `[reparatieprijzen]` op één centrale pagina (bijv. de bestaande
+   "Reparaties"/tarievenlijst-pagina) — geen aparte koppeling per product
+   nodig. Plaats de andere twee op de homepage, ter vervanging van de huidige
+   AWS-zoekbalk en het "Recente reparaties"-blok (zie Stap 4 hieronder).
 
 ## Stap 1 — Sleutel instellen in de Toolbox (Vercel)
 
@@ -47,12 +54,37 @@ De geheime sleutel staat al bovenin het bestand ingevuld (`TCTOOLBOX_API_KEY`)
 ooit gewijzigd, werk hem dan op **beide** plekken bij: hier in de snippet én
 als `REPARATIEPRIJZEN_API_KEY` in Vercel.
 
-## Stap 3 — Shortcode plaatsen
+## Stap 3 — Prijzenlijst plaatsen
 
 Zet `[reparatieprijzen]` op de gewenste pagina in de WordPress-editor
-(bijv. de huidige tarievenlijst-pagina). De prijslijst verschijnt direct,
-met een zoekbalk bovenaan en per merk/toestel een inklapbaar blokje met de
-reparaties en prijzen.
+(bijv. de huidige tarievenlijst-pagina). Vul daarna bovenin de snippet
+`TCTOOLBOX_TARIEVEN_URL` in met de URL van die pagina (bijv. `/tarievenlijst/`)
+— daar linkt de zoekbalk-shortcode straks naartoe.
+
+## Stap 4 — Zoekbalk en uitgelichte toestellen op de homepage
+
+**Zoekbalk vervangen**: de huidige zoekbalk op de homepage is de "Ajax
+Search for WooCommerce"-plugin (`aws-search-form`) en zoekt in alle
+WooCommerce-producten. Vervang die door `[reparatie_zoekbalk]` — dit zoekt
+in de Toolbox-toestellen en linkt bij een klik naar de tarievenlijst-pagina
+met dat toestel meteen open. De zoekbalk zit ingebouwd in een Smart
+Slider 3-slide, dus dit vervang je via de Smart Slider-editor (de laag met
+de huidige zoekbalk vervangen door een shortcode-laag met
+`[reparatie_zoekbalk]`), niet via de gewone pagina-editor.
+
+**"Recente reparaties" vervangen**: dit blok is het standaard WooCommerce
+"recente producten"-blok en toont toevallig de laatst aangemaakte
+productpagina's — geen echte activiteitsdata. Vervang dit blok door
+`[uitgelichte_toestellen]`. Standaard toont dit iPhone 16, iPhone 16 Pro,
+iPhone 15, Galaxy S24, Galaxy A55 en iPad 2019/2020 — pas dit aan met het
+`toestellen`-attribuut, bijv.:
+
+```
+[uitgelichte_toestellen toestellen="apple:ip16,apple:ip15,samsung:galaxys24,samsung:galaxya55"]
+```
+
+Elke waarde is `merksleutel:toestelsleutel` — beide vind je in de Toolbox
+bij Admin → Reparatieprijzen beheren.
 
 ## Foto's op de kaartjes
 

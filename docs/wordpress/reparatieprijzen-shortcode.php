@@ -1,11 +1,21 @@
 <?php
 /**
- * Telecombinatie Toolbox - Reparatieprijzen shortcode
+ * Telecombinatie Toolbox - Reparatieprijzen shortcodes
  *
  * Haalt de actuele reparatieprijzen live op uit de Toolbox en toont ze op
- * reparatiedeurne.nl via het shortcode [reparatieprijzen], als tabs per merk
- * met een kaartjes-grid (met productfoto) per toestel. Klik op een kaartje
- * voor de prijzentabel in een popup.
+ * reparatiedeurne.nl via drie shortcodes die allemaal dezelfde live data
+ * gebruiken:
+ *
+ * - [reparatieprijzen]         volledige prijzenlijst: tabs per merk met een
+ *                               kaartjes-grid (met productfoto) per toestel,
+ *                               klik voor de prijzentabel in een popup.
+ * - [reparatie_zoekbalk]       compacte zoekbalk (bijv. op de homepage) die
+ *                               live filtert op toestelnaam en bij een klik
+ *                               doorlinkt naar de prijzenlijst met dat
+ *                               toestel meteen geopend.
+ * - [uitgelichte_toestellen]   klein kaartjes-rijtje met een paar handmatig
+ *                               gekozen toestellen (bijv. op de homepage),
+ *                               zelfde stijl en popup als de prijzenlijst.
  *
  * INSTALLATIE
  * 1. Plak dit volledige bestand in een "Code Snippet" (bijv. via de WPCode of
@@ -15,8 +25,12 @@
  *    exact gelijk zijn aan de REPARATIEPRIJZEN_API_KEY die in de Toolbox
  *    (Vercel) is ingesteld. Niets aan te passen, tenzij de sleutel ooit
  *    gewijzigd wordt — dan hier en in Vercel allebei bijwerken.
- * 3. Plaats het shortcode [reparatieprijzen] op de gewenste pagina, bijv. de
- *    bestaande "Reparaties" / tarievenlijst-pagina.
+ * 3. Plaats [reparatieprijzen] op de bestaande "Reparaties" / tarievenlijst-
+ *    pagina. Vul TCTOOLBOX_TARIEVEN_URL hieronder in met die pagina-URL —
+ *    daar linkt de zoekbalk naartoe.
+ * 4. Plaats [reparatie_zoekbalk] en/of [uitgelichte_toestellen] op de
+ *    homepage, ter vervanging van de huidige AWS-zoekbalk en het "Recente
+ *    reparaties"-blok.
  *
  * FOTO'S
  * De kaartjes gebruiken de bestaande productfoto's van de WooCommerce-
@@ -35,6 +49,9 @@ define( 'TCTOOLBOX_API_KEY', 'a35a093f321617f8779fdd9378e59b2271252e84746977e966
 
 // Adres van de Toolbox-API. Alleen aanpassen als de Toolbox ooit op een ander domein komt.
 define( 'TCTOOLBOX_API_URL', 'https://app.tctoolbox.nl/api/public/reparatieprijzen' );
+
+// URL van de pagina waar [reparatieprijzen] op staat — de zoekbalk linkt hiernaartoe.
+define( 'TCTOOLBOX_TARIEVEN_URL', '/tarievenlijst/' );
 
 // Toolbox-toestelsleutel -> slug van de bestaande productpagina op deze site.
 $GLOBALS['TCTOOLBOX_PRODUCT_SLUGS'] = array(
@@ -143,13 +160,28 @@ $GLOBALS['TCTOOLBOX_PRODUCT_SLUGS'] = array(
 );
 
 add_shortcode( 'reparatieprijzen', 'tctb_reparatieprijzen_shortcode' );
+add_shortcode( 'reparatie_zoekbalk', 'tctb_zoekbalk_shortcode' );
+add_shortcode( 'uitgelichte_toestellen', 'tctb_uitgelicht_shortcode' );
 
-function tctb_reparatieprijzen_shortcode( $atts ) {
+/**
+ * Haalt de reparatieprijzen-data op bij de Toolbox. Wordt maar één keer per
+ * paginaverzoek echt opgehaald, ook als meerdere shortcodes op dezelfde
+ * pagina staan (bijv. de zoekbalk + de uitgelichte toestellen).
+ */
+function tctb_haal_data() {
+	static $opgehaald = false;
+	static $data = null;
+
+	if ( $opgehaald ) {
+		return $data;
+	}
+	$opgehaald = true;
+
 	if ( empty( TCTOOLBOX_API_KEY ) ) {
-		return '<p><em>Reparatieprijzen konden niet geladen worden (geen API-sleutel ingesteld).</em></p>';
+		return null;
 	}
 
-	// Altijd live ophalen: geen caching, elke paginabezoek krijgt de actuele Toolbox-prijzen.
+	// Altijd live ophalen: geen caching, elk paginabezoek krijgt de actuele Toolbox-prijzen.
 	$response = wp_remote_get(
 		TCTOOLBOX_API_URL,
 		array(
@@ -159,14 +191,23 @@ function tctb_reparatieprijzen_shortcode( $atts ) {
 	);
 
 	if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-		return tctb_reparatieprijzen_foutmelding();
+		return null;
 	}
 
-	$data = json_decode( wp_remote_retrieve_body( $response ), true );
-	if ( ! is_array( $data ) || empty( $data['merken'] ) ) {
-		return tctb_reparatieprijzen_foutmelding();
+	$json = json_decode( wp_remote_retrieve_body( $response ), true );
+	if ( ! is_array( $json ) || empty( $json['merken'] ) ) {
+		return null;
 	}
 
+	$data = $json;
+	return $data;
+}
+
+function tctb_reparatieprijzen_shortcode( $atts ) {
+	$data = tctb_haal_data();
+	if ( ! $data ) {
+		return tctb_reparatieprijzen_foutmelding();
+	}
 	$merken = $data['merken'];
 
 	ob_start();
@@ -201,46 +242,7 @@ function tctb_reparatieprijzen_shortcode( $atts ) {
 
 					<div class="tctb-grid">
 						<?php foreach ( $modellen as $model ) : ?>
-							<?php
-							$dialoog_id = 'tctb-dialoog-' . sanitize_html_class( $merk['key'] . '-' . $model['key'] );
-							$foto = tctb_product_afbeelding( $model['key'] );
-							?>
-							<button
-								type="button"
-								class="tctb-kaart"
-								data-zoekterm="<?php echo esc_attr( strtolower( $model['label'] ) ); ?>"
-								data-dialoog="<?php echo esc_attr( $dialoog_id ); ?>"
-							>
-								<span class="tctb-kaart-beeld">
-									<?php if ( $foto ) : ?>
-										<img src="<?php echo esc_url( $foto ); ?>" alt="" loading="lazy" />
-									<?php else : ?>
-										<?php echo tctb_placeholder_icoon(); ?>
-									<?php endif; ?>
-								</span>
-								<span class="tctb-kaart-naam"><?php echo esc_html( $model['label'] ); ?></span>
-							</button>
-
-							<dialog class="tctb-dialoog" id="<?php echo esc_attr( $dialoog_id ); ?>">
-								<button type="button" class="tctb-dialoog-sluiten" aria-label="Sluiten">&times;</button>
-								<h3><?php echo esc_html( $model['label'] ); ?></h3>
-								<table class="tctb-prijzen-tabel">
-									<thead>
-										<tr>
-											<th>Reparatie</th>
-											<th>Prijs</th>
-										</tr>
-									</thead>
-									<tbody>
-										<?php foreach ( $model['reparaties'] as $reparatie ) : ?>
-											<tr>
-												<td><?php echo esc_html( $reparatie['naam'] ); ?></td>
-												<td class="tctb-prijs"><?php echo esc_html( tctb_prijs_format( $reparatie['prijs'] ) ); ?></td>
-											</tr>
-										<?php endforeach; ?>
-									</tbody>
-								</table>
-							</dialog>
+							<?php echo tctb_kaart_html( $merk['key'], $model ); ?>
 						<?php endforeach; ?>
 					</div>
 				<?php endforeach; ?>
@@ -256,6 +258,160 @@ function tctb_reparatieprijzen_shortcode( $atts ) {
 	</div>
 
 	<?php echo tctb_reparatieprijzen_css_js(); ?>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * [reparatie_zoekbalk] — compacte, direct filterende zoekbalk. Laadt alleen
+ * de toestelnamen (geen prijzen) en linkt bij een klik naar de prijzenlijst
+ * met dat toestel meteen open (via ?tctb_toestel=merk__toestel).
+ */
+function tctb_zoekbalk_shortcode( $atts ) {
+	$data = tctb_haal_data();
+	if ( ! $data ) {
+		return tctb_reparatieprijzen_foutmelding();
+	}
+
+	$toestellen = array();
+	foreach ( $data['merken'] as $merk ) {
+		foreach ( $merk['modellen'] as $model ) {
+			$toestellen[] = array(
+				'label' => $model['label'],
+				'merk' => $merk['key'],
+				'model' => $model['key'],
+			);
+		}
+	}
+
+	ob_start();
+	?>
+	<div class="tctb-zoekbalk">
+		<input
+			type="search"
+			class="tctb-zb-input"
+			placeholder="Zoek je toestel, bijv. iPhone 13 of Galaxy S22…"
+			aria-label="Zoek je toestel"
+			autocomplete="off"
+		/>
+		<ul class="tctb-zb-suggesties" hidden></ul>
+		<script type="application/json" class="tctb-zb-data"><?php echo wp_json_encode( $toestellen ); ?></script>
+	</div>
+
+	<?php echo tctb_reparatieprijzen_css_js(); ?>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * [uitgelichte_toestellen] — klein kaartjes-rijtje met handmatig gekozen
+ * toestellen, bijv. voor op de homepage. Standaardlijst hieronder; override
+ * per plaatsing met het attribuut toestellen="merk:toestel,merk:toestel,...",
+ * bijv. [uitgelichte_toestellen toestellen="apple:ip16,samsung:galaxys24"].
+ * De merk-/toestelsleutel vind je in de Toolbox bij Reparatieprijzen beheren.
+ */
+function tctb_uitgelicht_shortcode( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'toestellen' => 'apple:ip16,apple:ip16p,apple:ip15,samsung:galaxys24,samsung:galaxya55,tablets:ipad2020',
+		),
+		$atts,
+		'uitgelichte_toestellen'
+	);
+
+	$data = tctb_haal_data();
+	if ( ! $data ) {
+		return tctb_reparatieprijzen_foutmelding();
+	}
+
+	$merken_bij_key = array();
+	foreach ( $data['merken'] as $merk ) {
+		$merken_bij_key[ $merk['key'] ] = $merk;
+	}
+
+	$kaarten_html = '';
+	foreach ( explode( ',', $atts['toestellen'] ) as $paar ) {
+		$paar = trim( $paar );
+		if ( ! str_contains( $paar, ':' ) ) {
+			continue;
+		}
+		list( $merk_key, $model_key ) = explode( ':', $paar, 2 );
+		$merk = $merken_bij_key[ $merk_key ] ?? null;
+		if ( ! $merk ) {
+			continue;
+		}
+		foreach ( $merk['modellen'] as $model ) {
+			if ( $model['key'] === $model_key ) {
+				$kaarten_html .= tctb_kaart_html( $merk_key, $model );
+				break;
+			}
+		}
+	}
+
+	if ( ! $kaarten_html ) {
+		return '';
+	}
+
+	ob_start();
+	?>
+	<div class="tctb-reparatieprijzen tctb-uitgelicht">
+		<div class="tctb-grid"><?php echo $kaarten_html; ?></div>
+	</div>
+
+	<?php echo tctb_reparatieprijzen_css_js(); ?>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Rendert één toestel-kaartje + bijbehorende prijzen-popup. Gedeeld door
+ * [reparatieprijzen] en [uitgelichte_toestellen] zodat beide er identiek
+ * uitzien.
+ */
+function tctb_kaart_html( $merk_key, $model ) {
+	$dialoog_id = 'tctb-dialoog-' . sanitize_html_class( $merk_key . '-' . $model['key'] );
+	$foto = tctb_product_afbeelding( $model['key'] );
+
+	ob_start();
+	?>
+	<button
+		type="button"
+		class="tctb-kaart"
+		data-zoekterm="<?php echo esc_attr( strtolower( $model['label'] ) ); ?>"
+		data-merk-key="<?php echo esc_attr( $merk_key ); ?>"
+		data-model-key="<?php echo esc_attr( $model['key'] ); ?>"
+		data-dialoog="<?php echo esc_attr( $dialoog_id ); ?>"
+	>
+		<span class="tctb-kaart-beeld">
+			<?php if ( $foto ) : ?>
+				<img src="<?php echo esc_url( $foto ); ?>" alt="" loading="lazy" />
+			<?php else : ?>
+				<?php echo tctb_placeholder_icoon(); ?>
+			<?php endif; ?>
+		</span>
+		<span class="tctb-kaart-naam"><?php echo esc_html( $model['label'] ); ?></span>
+	</button>
+
+	<dialog class="tctb-dialoog" id="<?php echo esc_attr( $dialoog_id ); ?>">
+		<button type="button" class="tctb-dialoog-sluiten" aria-label="Sluiten">&times;</button>
+		<h3><?php echo esc_html( $model['label'] ); ?></h3>
+		<table class="tctb-prijzen-tabel">
+			<thead>
+				<tr>
+					<th>Reparatie</th>
+					<th>Prijs</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ( $model['reparaties'] as $reparatie ) : ?>
+					<tr>
+						<td><?php echo esc_html( $reparatie['naam'] ); ?></td>
+						<td class="tctb-prijs"><?php echo esc_html( tctb_prijs_format( $reparatie['prijs'] ) ); ?></td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</dialog>
 	<?php
 	return ob_get_clean();
 }
@@ -419,79 +575,196 @@ function tctb_reparatieprijzen_css_js() {
 		.tctb-reparatieprijzen .tctb-contact-note a,
 		.tctb-reparatieprijzen .tctb-fout a { color: #840562; }
 		.tctb-reparatieprijzen .tctb-fout { color: #a33; }
+
+		/* [reparatie_zoekbalk] */
+		.tctb-zoekbalk, .tctb-zoekbalk * { box-sizing: border-box; }
+		.tctb-zoekbalk {
+			position: relative; width: 100%; max-width: 480px;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		}
+		.tctb-zoekbalk .tctb-zb-input {
+			all: unset; box-sizing: border-box; display: block; width: 100%; background: #fff; color: #222;
+			padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px;
+			outline: none; box-shadow: none; -webkit-appearance: none; appearance: none;
+		}
+		.tctb-zoekbalk .tctb-zb-input:focus, .tctb-zoekbalk .tctb-zb-input:focus-visible {
+			outline: none !important; box-shadow: none !important; border-color: #840562 !important;
+		}
+		.tctb-zoekbalk .tctb-zb-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+		.tctb-zoekbalk .tctb-zb-suggesties {
+			all: unset; position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0;
+			background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
+			max-height: 320px; overflow-y: auto; display: block;
+		}
+		.tctb-zoekbalk .tctb-zb-suggesties[hidden] { display: none; }
+		.tctb-zoekbalk .tctb-zb-suggesties li { all: unset; box-sizing: border-box; display: block; }
+		.tctb-zoekbalk .tctb-zb-suggesties a {
+			all: unset; box-sizing: border-box; display: block; cursor: pointer; padding: 10px 16px;
+			font-size: 14px; color: #333; border-bottom: 1px solid #f2f2f2;
+		}
+		.tctb-zoekbalk .tctb-zb-suggesties li:last-child a { border-bottom: none; }
+		.tctb-zoekbalk .tctb-zb-suggesties a:hover,
+		.tctb-zoekbalk .tctb-zb-suggesties a.tctb-zb-actief { background: #f9f0f6; color: #840562; }
+		.tctb-zoekbalk .tctb-zb-leeg { padding: 10px 16px; font-size: 14px; color: #888; }
 	</style>
 	<script>
 	(function () {
-		var container = document.querySelector('.tctb-reparatieprijzen');
-		if (!container) return;
+		// Als het snippet vroeg op de pagina staat (bijv. de zoekbalk bovenaan de homepage)
+		// moeten we wachten tot de rest van de pagina (incl. andere tctb-shortcodes verderop) is geladen.
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', tctbInit);
+		} else {
+			tctbInit();
+		}
 
-		var zoekveld = container.querySelector('.tctb-zoek');
-		var tabsBalk = container.querySelector('.tctb-tabs');
-		var tabs = container.querySelectorAll('.tctb-tab');
-		var panelen = container.querySelectorAll('.tctb-merk-paneel');
-		var geenResultaten = container.querySelector('.tctb-geen-resultaten');
+		function tctbInit() {
+		/* ---- [reparatieprijzen] en [uitgelichte_toestellen]: elke container los initialiseren ---- */
+		document.querySelectorAll('.tctb-reparatieprijzen').forEach(function (container) {
+			var zoekveld = container.querySelector('.tctb-zoek');
+			var tabsBalk = container.querySelector('.tctb-tabs');
+			var tabs = container.querySelectorAll('.tctb-tab');
+			var panelen = container.querySelectorAll('.tctb-merk-paneel');
+			var geenResultaten = container.querySelector('.tctb-geen-resultaten');
 
-		tabs.forEach(function (tab) {
-			tab.addEventListener('click', function () {
-				tabs.forEach(function (t) { t.classList.remove('tctb-tab-actief'); });
-				tab.classList.add('tctb-tab-actief');
-				var merk = tab.getAttribute('data-merk-tab');
-				panelen.forEach(function (paneel) {
-					paneel.classList.toggle('tctb-paneel-actief', paneel.getAttribute('data-merk-paneel') === merk);
-				});
-			});
-		});
-
-		zoekveld.addEventListener('input', function () {
-			var term = zoekveld.value.trim().toLowerCase();
-			var zoekActief = term.length > 0;
-			container.classList.toggle('tctb-zoeken-actief', zoekActief);
-			tabsBalk.classList.toggle('tctb-tabs-verborgen', zoekActief);
-
-			var totaalZichtbaar = 0;
-
-			panelen.forEach(function (paneel) {
-				var zichtbareKaarten = 0;
-				var groepen = paneel.querySelectorAll('.tctb-groep-titel');
-				var kaarten = paneel.querySelectorAll('.tctb-kaart');
-
-				kaarten.forEach(function (kaart) {
-					var match = !zoekActief || kaart.getAttribute('data-zoekterm').indexOf(term) !== -1;
-					kaart.classList.toggle('tctb-verborgen', !match);
-					if (match) zichtbareKaarten++;
-				});
-
-				groepen.forEach(function (groep) {
-					var grid = groep.nextElementSibling;
-					var heeftZichtbare = grid && grid.querySelectorAll('.tctb-kaart:not(.tctb-verborgen)').length > 0;
-					groep.classList.toggle('tctb-verborgen', zoekActief && !heeftZichtbare);
-				});
-
-				paneel.classList.toggle('tctb-paneel-leeg', zoekActief && zichtbareKaarten === 0);
-				totaalZichtbaar += zichtbareKaarten;
-			});
-
-			geenResultaten.hidden = !zoekActief || totaalZichtbaar > 0;
-		});
-
-		container.querySelectorAll('.tctb-kaart').forEach(function (kaart) {
-			kaart.addEventListener('click', function () {
+			function openDialoog(kaart) {
 				var dialoog = document.getElementById(kaart.getAttribute('data-dialoog'));
 				if (dialoog && typeof dialoog.showModal === 'function') dialoog.showModal();
+			}
+
+			tabs.forEach(function (tab) {
+				tab.addEventListener('click', function () {
+					tabs.forEach(function (t) { t.classList.remove('tctb-tab-actief'); });
+					tab.classList.add('tctb-tab-actief');
+					var merk = tab.getAttribute('data-merk-tab');
+					panelen.forEach(function (paneel) {
+						paneel.classList.toggle('tctb-paneel-actief', paneel.getAttribute('data-merk-paneel') === merk);
+					});
+				});
 			});
+
+			if (zoekveld) {
+				zoekveld.addEventListener('input', function () {
+					var term = zoekveld.value.trim().toLowerCase();
+					var zoekActief = term.length > 0;
+					container.classList.toggle('tctb-zoeken-actief', zoekActief);
+					if (tabsBalk) tabsBalk.classList.toggle('tctb-tabs-verborgen', zoekActief);
+
+					var totaalZichtbaar = 0;
+
+					panelen.forEach(function (paneel) {
+						var zichtbareKaarten = 0;
+						var groepen = paneel.querySelectorAll('.tctb-groep-titel');
+						var kaarten = paneel.querySelectorAll('.tctb-kaart');
+
+						kaarten.forEach(function (kaart) {
+							var match = !zoekActief || kaart.getAttribute('data-zoekterm').indexOf(term) !== -1;
+							kaart.classList.toggle('tctb-verborgen', !match);
+							if (match) zichtbareKaarten++;
+						});
+
+						groepen.forEach(function (groep) {
+							var grid = groep.nextElementSibling;
+							var heeftZichtbare = grid && grid.querySelectorAll('.tctb-kaart:not(.tctb-verborgen)').length > 0;
+							groep.classList.toggle('tctb-verborgen', zoekActief && !heeftZichtbare);
+						});
+
+						paneel.classList.toggle('tctb-paneel-leeg', zoekActief && zichtbareKaarten === 0);
+						totaalZichtbaar += zichtbareKaarten;
+					});
+
+					if (geenResultaten) geenResultaten.hidden = !zoekActief || totaalZichtbaar > 0;
+				});
+			}
+
+			container.querySelectorAll('.tctb-kaart').forEach(function (kaart) {
+				kaart.addEventListener('click', function () { openDialoog(kaart); });
+			});
+
+			container.querySelectorAll('.tctb-dialoog-sluiten').forEach(function (knop) {
+				knop.addEventListener('click', function () {
+					knop.closest('.tctb-dialoog').close();
+				});
+			});
+
+			container.querySelectorAll('.tctb-dialoog').forEach(function (dialoog) {
+				dialoog.addEventListener('click', function (e) {
+					if (e.target === dialoog) dialoog.close();
+				});
+			});
+
+			// Diepe link vanaf de zoekbalk-shortcode: ?tctb_toestel=merk__toestel
+			// opent dat toestel meteen, ongeacht welke tab standaard actief is.
+			var doel = new URLSearchParams(window.location.search).get('tctb_toestel');
+			if (doel && doel.indexOf('__') !== -1) {
+				var delen = doel.split('__');
+				var kaart = container.querySelector(
+					'.tctb-kaart[data-merk-key="' + CSS.escape(delen[0]) + '"][data-model-key="' + CSS.escape(delen[1]) + '"]'
+				);
+				if (kaart) {
+					var tab = container.querySelector('.tctb-tab[data-merk-tab="' + CSS.escape(delen[0]) + '"]');
+					if (tab) tab.click();
+					kaart.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					openDialoog(kaart);
+				}
+			}
 		});
 
-		container.querySelectorAll('.tctb-dialoog-sluiten').forEach(function (knop) {
-			knop.addEventListener('click', function () {
-				knop.closest('.tctb-dialoog').close();
-			});
-		});
+		/* ---- [reparatie_zoekbalk] ---- */
+		document.querySelectorAll('.tctb-zoekbalk').forEach(function (widget) {
+			var input = widget.querySelector('.tctb-zb-input');
+			var lijst = widget.querySelector('.tctb-zb-suggesties');
+			var dataTag = widget.querySelector('.tctb-zb-data');
+			var toestellen = [];
+			try { toestellen = JSON.parse(dataTag.textContent); } catch (e) { toestellen = []; }
 
-		container.querySelectorAll('.tctb-dialoog').forEach(function (dialoog) {
-			dialoog.addEventListener('click', function (e) {
-				if (e.target === dialoog) dialoog.close();
+			function naarToestel(toestel) {
+				var url = <?php echo wp_json_encode( TCTOOLBOX_TARIEVEN_URL ); ?>;
+				var scheidingsteken = url.indexOf('?') === -1 ? '?' : '&';
+				window.location.href = url + scheidingsteken + 'tctb_toestel=' + encodeURIComponent(toestel.merk + '__' + toestel.model);
+			}
+
+			input.addEventListener('input', function () {
+				var term = input.value.trim().toLowerCase();
+				lijst.innerHTML = '';
+
+				if (!term) { lijst.hidden = true; return; }
+
+				var matches = toestellen.filter(function (t) {
+					return t.label.toLowerCase().indexOf(term) !== -1;
+				}).slice(0, 8);
+
+				if (!matches.length) {
+					var leeg = document.createElement('p');
+					leeg.className = 'tctb-zb-leeg';
+					leeg.textContent = 'Geen toestel gevonden.';
+					lijst.appendChild(leeg);
+					lijst.hidden = false;
+					return;
+				}
+
+				matches.forEach(function (toestel) {
+					var li = document.createElement('li');
+					var a = document.createElement('a');
+					a.textContent = toestel.label;
+					a.addEventListener('click', function () { naarToestel(toestel); });
+					li.appendChild(a);
+					lijst.appendChild(li);
+				});
+				lijst.hidden = false;
+			});
+
+			input.addEventListener('keydown', function (e) {
+				if (e.key === 'Enter') {
+					var eerste = lijst.querySelector('a');
+					if (eerste) { e.preventDefault(); eerste.click(); }
+				}
+			});
+
+			document.addEventListener('click', function (e) {
+				if (!widget.contains(e.target)) lijst.hidden = true;
 			});
 		});
+		}
 	})();
 	</script>
 	<?php

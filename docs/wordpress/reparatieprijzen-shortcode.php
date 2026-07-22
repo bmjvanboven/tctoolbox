@@ -345,8 +345,13 @@ function tctb_reparatieprijzen_css_js() {
 		.tctb-reparatieprijzen .tctb-zoek {
 			all: unset; box-sizing: border-box; display: block; width: 100%; background: #fff; color: #222;
 			padding: 12px 16px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px;
+			outline: none; box-shadow: none; -webkit-appearance: none; appearance: none;
 		}
-		.tctb-reparatieprijzen .tctb-zoek:focus { outline: none; border-color: #840562; }
+		.tctb-reparatieprijzen .tctb-zoek:focus,
+		.tctb-reparatieprijzen .tctb-zoek:focus-visible {
+			outline: none !important; box-shadow: none !important; border-color: #840562 !important;
+		}
+		.tctb-reparatieprijzen .tctb-zoek::-webkit-search-cancel-button { -webkit-appearance: none; }
 
 		.tctb-reparatieprijzen .tctb-tabs {
 			display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; padding: 0 0 12px; border-bottom: 1px solid #e5e5e5;
@@ -356,8 +361,13 @@ function tctb_reparatieprijzen_css_js() {
 			border: 1px solid #ddd; background: #fff; color: #555;
 			padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; transition: all .15s;
 		}
-		.tctb-reparatieprijzen .tctb-tab:hover { border-color: #840562; color: #840562; }
-		.tctb-reparatieprijzen .tctb-tab-actief, .tctb-reparatieprijzen .tctb-tab-actief:hover { background: #840562; border-color: #840562; color: #fff; }
+		.tctb-reparatieprijzen .tctb-tab:hover {
+			background: #fff !important; border-color: #840562 !important; color: #840562 !important;
+		}
+		.tctb-reparatieprijzen .tctb-tab-actief,
+		.tctb-reparatieprijzen .tctb-tab-actief:hover {
+			background: #840562 !important; border-color: #840562 !important; color: #fff !important;
+		}
 
 		.tctb-reparatieprijzen .tctb-merk-paneel { display: none; }
 		.tctb-reparatieprijzen .tctb-merk-paneel.tctb-paneel-actief { display: block; }

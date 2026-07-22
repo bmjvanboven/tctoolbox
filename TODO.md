@@ -7,6 +7,12 @@
 
 ## Backlog
 
+### Dagspelletjes
+
+- [ ] **Dagspelletjes-systeem** — net als LinkedIn: dagelijks spel, 1x per dag spelen, gerankt leaderboard
+  - Ideeën en ontwerpprincipes: zie [`docs/spellen-ideeen.md`](docs/spellen-ideeen.md)
+  - Eerste spel in ontwikkeling: Merk Pinpoint (`/spellen/pinpoint`)
+
 ### Nieuws & Communicatie
 
 - [ ] **Nieuwsoverzicht / updates** — intern nieuwskanaal waar management updates plaatst

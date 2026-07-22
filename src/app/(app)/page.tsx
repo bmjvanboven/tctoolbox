@@ -36,8 +36,8 @@ const tools = [
     status: "live",
   },
   {
-    href: "/tools/refurbished-inboek",
-    label: "Toestel inname",
+    href: "/tools/inkoop",
+    label: "Inkoop",
     beschrijving: "Toestellen inboeken",
     icon: Smartphone,
     accent: "#840562",

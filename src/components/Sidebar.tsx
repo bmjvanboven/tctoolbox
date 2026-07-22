@@ -20,7 +20,8 @@ const groepen = [
     label: "Reparatie",
     items: [
       { href: "/tools/reparatieprijzen", label: "Reparatieprijzen" },
-      { href: "/tools/refurbished-inboek", label: "Toestel inname" },
+      { href: "/tools/inkoop", label: "Inkoop" },
+      { href: "/tools/verkoop", label: "Verkoop" },
       { href: "/tools/reparatieplanner", label: "Reparatieplanner", disabled: true },
     ],
   },
@@ -99,6 +100,10 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           Nieuws
         </Link>
 
+        <Link href="/spellen" onClick={onNavigate} className={linkClass(pathname.startsWith("/spellen"))}>
+          Spellen
+        </Link>
+
         <Link
           href="/marketing"
           onClick={onNavigate}
@@ -170,6 +175,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
             {[
               ...(isAdmin ? [{ href: "/admin/tools/snelkeuzes", label: "Snelkeuzes" }] : []),
               { href: "/admin/tools/reparatieprijzen", label: "Reparatieprijzen" },
+              { href: "/admin/tools/inkoopprijzen", label: "Inkoopprijzen" },
               { href: "/admin/tools/verkoopprijzen", label: "Verkoopprijzen" },
               ...(isAdmin ? [{ href: "/admin/audit-log", label: "Audit log" }] : []),
             ].map(item => (

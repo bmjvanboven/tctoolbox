@@ -2,9 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { Plus, Trash2, Search, X } from "lucide-react";
+import InkoopCalculator from "./InkoopCalculator";
 
-interface PrijsEntry { id: number; gb: number; grade: string; prijs: number; }
-interface ModelData  { id: number; naam: string; gb: number[]; prijzen: PrijsEntry[]; }
+export interface PrijsEntry { id: number; gb: number; grade: string; prijs: number; innamePrijs: number | null; }
+export interface ModelData  { id: number; naam: string; onderdelenInname: number | null; gb: number[]; prijzen: PrijsEntry[]; }
 interface Rij { id: number; modelId: number | null; gb: string; grade: string; qty: number; }
 
 let nextId = 1;
@@ -18,8 +19,8 @@ function gradeKleur(grade: string) {
   return "bg-red-100 text-red-600";
 }
 
-export default function RefurbishedClient({ modellen }: { modellen: ModelData[] }) {
-  const [tab, setTab] = useState<"inboeken" | "prijzen">("inboeken");
+export default function InkoopClient({ modellen }: { modellen: ModelData[] }) {
+  const [tab, setTab] = useState<"calculator" | "inboeken" | "prijzen">("calculator");
   const [zoek, setZoek] = useState("");
 
   // Inboeken state
@@ -67,13 +68,16 @@ export default function RefurbishedClient({ modellen }: { modellen: ModelData[] 
     <div className="space-y-4">
       {/* Tabs */}
       <div className="flex gap-1 bg-white border border-gray-200 rounded-xl p-1 w-fit">
-        {([["inboeken", "Batch inboeken"], ["prijzen", "Prijsoverzicht"]] as const).map(([id, label]) => (
+        {([["calculator", "Inkoopcalculator"], ["inboeken", "Batch inboeken"], ["prijzen", "Prijsoverzicht"]] as const).map(([id, label]) => (
           <button key={id} onClick={() => setTab(id)}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${tab === id ? "bg-[#840562] text-white" : "text-gray-500 hover:bg-gray-100"}`}>
             {label}
           </button>
         ))}
       </div>
+
+      {/* Inkoopcalculator */}
+      {tab === "calculator" && <InkoopCalculator modellen={modellen} />}
 
       {/* Prijsoverzicht */}
       {tab === "prijzen" && (
@@ -99,8 +103,13 @@ export default function RefurbishedClient({ modellen }: { modellen: ModelData[] 
 
               return (
                 <div key={model.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                  <div className="px-5 py-3 border-b border-gray-100 bg-gray-50">
+                  <div className="px-5 py-3 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
                     <p className="text-sm font-bold text-gray-800">{model.naam}</p>
+                    {model.onderdelenInname !== null && (
+                      <span className="text-xs font-medium text-gray-500">
+                        Onderdelen inname: <span className="font-bold text-gray-700">€ {model.onderdelenInname}</span>
+                      </span>
+                    )}
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
@@ -122,7 +131,14 @@ export default function RefurbishedClient({ modellen }: { modellen: ModelData[] 
                               const p = prijzen.find(x => x.grade === g);
                               return (
                                 <td key={g} className="px-4 py-2.5 text-center">
-                                  {p ? <span className="font-bold text-gray-800">€ {p.prijs}</span> : <span className="text-gray-300">—</span>}
+                                  {p ? (
+                                    <div className="flex flex-col items-center">
+                                      {p.innamePrijs !== null
+                                        ? <span className="font-bold text-gray-800">€ {p.innamePrijs}</span>
+                                        : <span className="text-gray-300">—</span>}
+                                      <span className="text-[11px] text-gray-400">verkoop € {p.prijs}</span>
+                                    </div>
+                                  ) : <span className="text-gray-300">—</span>}
                                 </td>
                               );
                             })}

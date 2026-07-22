@@ -47,6 +47,7 @@ export async function verstuurUitnodigingsMail(email: string, naam: string, uitn
           </a>
         </p>
         <p>Deze link is 48 uur geldig. Heb je geen account verwacht? Dan kun je deze e-mail negeren.</p>
+        <p>Je vindt de Toolbox voortaan op <a href="https://app.tctoolbox.nl/" style="color: #840562;">app.tctoolbox.nl</a>.</p>
       </div>
     `,
   });

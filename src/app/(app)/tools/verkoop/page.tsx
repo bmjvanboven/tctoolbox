@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/db";
-import RefurbishedClient from "./RefurbishedClient";
+import VerkoopClient from "./VerkoopClient";
 
-export default async function RefurbishedInboekPage() {
+export const dynamic = "force-dynamic";
+
+export default async function VerkoopPage() {
   const modellen = await prisma.verkoopModel.findMany({
     orderBy: { volgorde: "asc" },
     include: { prijzen: { orderBy: [{ gb: "asc" }, { grade: "asc" }] } },
@@ -10,9 +12,8 @@ export default async function RefurbishedInboekPage() {
   const data = modellen.map(m => ({
     id: m.id,
     naam: m.naam,
-    gb: [...new Set(m.prijzen.map(p => p.gb))].sort((a, b) => a - b),
     prijzen: m.prijzen.map(p => ({ id: p.id, gb: p.gb, grade: p.grade, prijs: p.prijs })),
   }));
 
-  return <RefurbishedClient modellen={data} />;
+  return <VerkoopClient modellen={data} />;
 }

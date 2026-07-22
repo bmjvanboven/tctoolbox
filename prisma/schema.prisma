@@ -42,6 +42,7 @@ model User {
   marketingGezien     MarketingGezien[]
   wachtwoordResets    WachtwoordResetToken[]
   auditLogs           AuditLog[]
+  pinpointPogingen    PinpointPoging[]
 }
 
 model WachtwoordResetToken {
@@ -121,19 +122,21 @@ model ReparatieItem {
 
 // ── Verkoopprijzen (refurbished) ──────────────────────────────────────────────
 model VerkoopModel {
-  id      Int            @id @default(autoincrement())
-  naam    String         @unique
-  volgorde Int           @default(0)
-  prijzen VerkoopPrijs[]
+  id               Int            @id @default(autoincrement())
+  naam             String         @unique
+  volgorde         Int            @default(0)
+  onderdelenInname Int?
+  prijzen          VerkoopPrijs[]
 }
 
 model VerkoopPrijs {
-  id      Int          @id @default(autoincrement())
-  gb      Int
-  grade   String
-  prijs   Int
-  model   VerkoopModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
-  modelId Int
+  id          Int          @id @default(autoincrement())
+  gb          Int
+  grade       String
+  prijs       Int
+  innamePrijs Int?
+  model       VerkoopModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  modelId     Int
 
   @@unique([modelId, gb, grade])
 }
@@ -272,4 +275,22 @@ model MarketingAanvraag {
   bijgewerkt  DateTime           @updatedAt
 
   @@unique([materiaalId, aanvragerId])
+}
+
+// ── Dagspelletjes: Pinpoint ────────────────────────────────────────────────────
+model PinpointPoging {
+  id            String   @id @default(cuid())
+  datum         String   // dagsleutel, formaat YYYY-MM-DD
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  gokken          String[] @default([])
+  woordenGetoond  Int      @default(1) // aantal hint-woorden dat zichtbaar is (1-5)
+  aantalWoorden   Int?     // aantal woorden nodig om te raden (1-5), leeg = niet opgelost
+  opgelost        Boolean  @default(false)
+  afgerond        Boolean  @default(false) // opgelost, of alle 5 pogingen verbruikt
+  aangemaakt    DateTime @default(now())
+  bijgewerkt    DateTime @updatedAt
+
+  @@unique([datum, userId])
+  @@index([datum, opgelost, aantalWoorden])
 }

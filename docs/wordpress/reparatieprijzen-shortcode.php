@@ -196,7 +196,7 @@ function tctb_reparatieprijzen_shortcode( $atts ) {
 			>
 				<?php foreach ( tctb_groepeer_modellen( $merk['modellen'] ) as $groep_naam => $modellen ) : ?>
 					<?php if ( $groep_naam ) : ?>
-						<h3 class="tctb-groep-titel"><?php echo esc_html( $groep_naam ); ?></h3>
+						<p class="tctb-groep-titel"><?php echo esc_html( $groep_naam ); ?></p>
 					<?php endif; ?>
 
 					<div class="tctb-grid">
@@ -330,63 +330,85 @@ function tctb_reparatieprijzen_css_js() {
 	ob_start();
 	?>
 	<style>
-		.tctb-reparatieprijzen { max-width: 1000px; margin: 0 auto; font-family: inherit; }
+		/*
+		 * Elke regel is bewust dubbel geprefixt (.tctb-reparatieprijzen + eigen klasse)
+		 * en knoppen/koppen gebruiken "all: unset" voordat de eigen stijl wordt gezet.
+		 * Zo wint dit altijd van de standaard thema-stijl van de site, ongeacht waar
+		 * het shortcode geplaatst wordt.
+		 */
+		.tctb-reparatieprijzen, .tctb-reparatieprijzen * { box-sizing: border-box; }
+		.tctb-reparatieprijzen {
+			width: 100%; max-width: 100%; margin: 0; text-align: left; color: #222;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		}
+
 		.tctb-reparatieprijzen .tctb-zoek {
-			width: 100%; box-sizing: border-box; padding: 12px 16px; margin-bottom: 20px;
-			border: 1px solid #ddd; border-radius: 8px; font-size: 15px;
+			all: unset; box-sizing: border-box; display: block; width: 100%; background: #fff; color: #222;
+			padding: 12px 16px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px;
 		}
 		.tctb-reparatieprijzen .tctb-zoek:focus { outline: none; border-color: #840562; }
 
-		.tctb-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid #e5e5e5; padding-bottom: 12px; }
-		.tctb-tab {
-			font: inherit; cursor: pointer; border: 1px solid #ddd; background: #fff; color: #555;
+		.tctb-reparatieprijzen .tctb-tabs {
+			display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; padding: 0 0 12px; border-bottom: 1px solid #e5e5e5;
+		}
+		.tctb-reparatieprijzen .tctb-tab {
+			all: unset; box-sizing: border-box; display: inline-block; cursor: pointer; text-align: center;
+			border: 1px solid #ddd; background: #fff; color: #555;
 			padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; transition: all .15s;
 		}
-		.tctb-tab:hover { border-color: #840562; color: #840562; }
-		.tctb-tab-actief, .tctb-tab-actief:hover { background: #840562; border-color: #840562; color: #fff; }
+		.tctb-reparatieprijzen .tctb-tab:hover { border-color: #840562; color: #840562; }
+		.tctb-reparatieprijzen .tctb-tab-actief, .tctb-reparatieprijzen .tctb-tab-actief:hover { background: #840562; border-color: #840562; color: #fff; }
 
-		.tctb-merk-paneel { display: none; }
-		.tctb-merk-paneel.tctb-paneel-actief { display: block; }
+		.tctb-reparatieprijzen .tctb-merk-paneel { display: none; }
+		.tctb-reparatieprijzen .tctb-merk-paneel.tctb-paneel-actief { display: block; }
 		.tctb-reparatieprijzen.tctb-zoeken-actief .tctb-merk-paneel { display: block; }
 		.tctb-reparatieprijzen.tctb-zoeken-actief .tctb-merk-paneel.tctb-paneel-leeg { display: none; }
-		.tctb-tabs.tctb-tabs-verborgen { display: none; }
+		.tctb-reparatieprijzen .tctb-tabs.tctb-tabs-verborgen { display: none; }
 
-		.tctb-groep-titel { color: #555; font-size: 14px; text-transform: uppercase; letter-spacing: .04em; margin: 20px 0 10px; }
-		.tctb-groep-titel.tctb-verborgen { display: none; }
-
-		.tctb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
-		.tctb-kaart {
-			font: inherit; cursor: pointer; text-align: center; background: #fff; border: 1px solid #e5e5e5;
-			border-radius: 12px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center;
-			gap: 8px; transition: box-shadow .15s, border-color .15s;
+		.tctb-reparatieprijzen .tctb-groep-titel {
+			all: unset; box-sizing: border-box; display: inline-block;
+			margin: 28px 0 12px; padding: 0 0 4px; border-bottom: 2px solid #f0d3e8;
+			font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: #840562;
 		}
-		.tctb-kaart:hover { border-color: #840562; box-shadow: 0 4px 14px rgba(132,5,98,.12); }
-		.tctb-kaart.tctb-verborgen { display: none; }
-		.tctb-kaart-beeld { width: 100%; height: 90px; display: flex; align-items: center; justify-content: center; }
-		.tctb-kaart-beeld img { max-width: 100%; max-height: 90px; object-fit: contain; }
-		.tctb-icoon { width: 40px; height: 40px; color: #ccc; }
-		.tctb-kaart-naam { font-size: 13px; font-weight: 600; color: #333; line-height: 1.3; }
+		.tctb-reparatieprijzen .tctb-groep-titel.tctb-verborgen { display: none; }
 
-		.tctb-dialoog {
-			border: none; border-radius: 14px; padding: 24px; max-width: 420px; width: 90vw;
-			box-shadow: 0 10px 40px rgba(0,0,0,.2);
+		.tctb-reparatieprijzen .tctb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+		.tctb-reparatieprijzen .tctb-kaart {
+			all: unset; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 8px;
+			cursor: pointer; text-align: center; background: #fff; border: 1px solid #e5e5e5; border-radius: 12px;
+			padding: 14px 10px; transition: box-shadow .15s, border-color .15s;
 		}
-		.tctb-dialoog::backdrop { background: rgba(0,0,0,.5); }
-		.tctb-dialoog h3 { margin: 0 24px 14px 0; color: #840562; }
-		.tctb-dialoog-sluiten {
-			position: absolute; top: 14px; right: 14px; border: none; background: none; font-size: 22px;
-			line-height: 1; cursor: pointer; color: #999; padding: 4px;
+		.tctb-reparatieprijzen .tctb-kaart:hover { border-color: #840562; box-shadow: 0 4px 14px rgba(132,5,98,.12); }
+		.tctb-reparatieprijzen .tctb-kaart.tctb-verborgen { display: none; }
+		.tctb-reparatieprijzen .tctb-kaart-beeld { width: 100%; height: 90px; display: flex; align-items: center; justify-content: center; }
+		.tctb-reparatieprijzen .tctb-kaart-beeld img { max-width: 100%; max-height: 90px; object-fit: contain; }
+		.tctb-reparatieprijzen .tctb-icoon { width: 40px; height: 40px; color: #ccc; }
+		.tctb-reparatieprijzen .tctb-kaart-naam { font-size: 13px; font-weight: 600; color: #333; line-height: 1.3; }
+
+		.tctb-reparatieprijzen .tctb-dialoog {
+			box-sizing: border-box; border: none; border-radius: 14px; padding: 24px; max-width: 420px; width: 90vw;
+			box-shadow: 0 10px 40px rgba(0,0,0,.2); font-family: inherit; color: #222;
 		}
-		.tctb-dialoog-sluiten:hover { color: #840562; }
+		.tctb-reparatieprijzen .tctb-dialoog::backdrop { background: rgba(0,0,0,.5); }
+		.tctb-reparatieprijzen .tctb-dialoog h3 {
+			all: unset; display: block; margin: 0 24px 14px 0; font-size: 18px; font-weight: 700; color: #840562;
+		}
+		.tctb-reparatieprijzen .tctb-dialoog-sluiten {
+			all: unset; box-sizing: border-box; position: absolute; top: 14px; right: 14px; cursor: pointer;
+			font-size: 22px; line-height: 1; color: #999; padding: 4px;
+		}
+		.tctb-reparatieprijzen .tctb-dialoog-sluiten:hover { color: #840562; }
 
-		.tctb-prijzen-tabel { width: 100%; border-collapse: collapse; font-size: 14px; }
-		.tctb-prijzen-tabel th { text-align: left; color: #888; font-weight: 600; padding: 6px 4px; border-bottom: 1px solid #eee; }
-		.tctb-prijzen-tabel td { padding: 8px 4px; border-bottom: 1px solid #f2f2f2; }
-		.tctb-prijzen-tabel .tctb-prijs { text-align: right; font-weight: 700; white-space: nowrap; }
+		.tctb-reparatieprijzen .tctb-prijzen-tabel { all: unset; display: table; width: 100%; border-collapse: collapse; font-size: 14px; }
+		.tctb-reparatieprijzen .tctb-prijzen-tabel th { all: unset; box-sizing: border-box; display: table-cell; text-align: left; color: #888; font-weight: 600; padding: 6px 4px; border-bottom: 1px solid #eee; }
+		.tctb-reparatieprijzen .tctb-prijzen-tabel td { all: unset; box-sizing: border-box; display: table-cell; padding: 8px 4px; border-bottom: 1px solid #f2f2f2; }
+		.tctb-reparatieprijzen .tctb-prijzen-tabel .tctb-prijs { text-align: right; font-weight: 700; white-space: nowrap; }
 
-		.tctb-geen-resultaten { color: #666; font-size: 14px; }
-		.tctb-contact-note { margin-top: 24px; color: #666; font-size: 14px; }
-		.tctb-fout { color: #a33; }
+		.tctb-reparatieprijzen .tctb-geen-resultaten { color: #666; font-size: 14px; }
+		.tctb-reparatieprijzen .tctb-contact-note { margin-top: 24px; color: #666; font-size: 14px; }
+		.tctb-reparatieprijzen .tctb-contact-note a,
+		.tctb-reparatieprijzen .tctb-fout a { color: #840562; }
+		.tctb-reparatieprijzen .tctb-fout { color: #a33; }
 	</style>
 	<script>
 	(function () {

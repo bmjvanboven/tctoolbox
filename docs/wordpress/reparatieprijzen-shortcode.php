@@ -274,7 +274,7 @@ function tctb_reparatieprijzen_shortcode( $atts ) {
 		</p>
 	</div>
 
-	<?php echo tctb_reparatieprijzen_css_js(); ?>
+	<?php echo tctb_print_js(); ?>
 	<?php
 	return ob_get_clean();
 }
@@ -315,7 +315,7 @@ function tctb_zoekbalk_shortcode( $atts ) {
 		<script type="application/json" class="tctb-zb-data"><?php echo wp_json_encode( $toestellen ); ?></script>
 	</div>
 
-	<?php echo tctb_reparatieprijzen_css_js(); ?>
+	<?php echo tctb_print_js(); ?>
 	<?php
 	return ob_get_clean();
 }
@@ -330,7 +330,7 @@ function tctb_zoekbalk_shortcode( $atts ) {
 function tctb_uitgelicht_shortcode( $atts ) {
 	$atts = shortcode_atts(
 		array(
-			'toestellen' => 'apple:ip16,apple:ip16p,apple:ip15,samsung:galaxys24,samsung:galaxya55,tablets:ipad2020',
+			'toestellen' => 'apple:ip16,apple:ip16p,apple:ip15,apple:ip13,samsung:galaxys24,samsung:galaxys23,samsung:galaxya55,tablets:ipad2020',
 		),
 		$atts,
 		'uitgelichte_toestellen'
@@ -375,7 +375,7 @@ function tctb_uitgelicht_shortcode( $atts ) {
 		<div class="tctb-grid"><?php echo $kaarten_html; ?></div>
 	</div>
 
-	<?php echo tctb_reparatieprijzen_css_js(); ?>
+	<?php echo tctb_print_js(); ?>
 	<?php
 	return ob_get_clean();
 }
@@ -491,15 +491,13 @@ function tctb_reparatieprijzen_foutmelding() {
 }
 
 /**
- * CSS + JS wordt inline meegegeven zodat het snippet zonder losse bestanden werkt.
- * Wordt maar één keer per pagina uitgevoerd, ook als het shortcode meerdere keren voorkomt.
+ * CSS wordt via wp_head in de <head> geladen (niet inline in de shortcode-
+ * uitvoer) zodat de stijl er al staat vóórdat de pagina-inhoud getekend
+ * wordt. Anders is op een trage site/verbinding kort de ongestylede
+ * (thema-)opmaak zichtbaar voordat onze eigen stijl "inklapt".
  */
-function tctb_reparatieprijzen_css_js() {
-	static $al_geladen = false;
-	if ( $al_geladen ) {
-		return '';
-	}
-	$al_geladen = true;
+add_action( 'wp_head', 'tctb_print_css' );
+function tctb_print_css() {
 	ob_start();
 	?>
 	<style>
@@ -625,23 +623,43 @@ function tctb_reparatieprijzen_css_js() {
 		.tctb-zoekbalk .tctb-zb-suggesties[hidden] { display: none; }
 		.tctb-zoekbalk .tctb-zb-suggesties li { all: unset; box-sizing: border-box; display: block; }
 		.tctb-zoekbalk .tctb-zb-suggesties a {
-			all: unset; box-sizing: border-box; display: block; cursor: pointer; padding: 10px 16px;
-			font-size: 14px; color: #333; border-bottom: 1px solid #f2f2f2;
+			all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px;
+			cursor: pointer; padding: 10px 16px; font-size: 14px; color: #333; border-bottom: 1px solid #f2f2f2;
 		}
 		.tctb-zoekbalk .tctb-zb-suggesties li:last-child a { border-bottom: none; }
 		.tctb-zoekbalk .tctb-zb-suggesties a:hover,
 		.tctb-zoekbalk .tctb-zb-suggesties a.tctb-zb-actief { background: #f9f0f6; color: #840562; }
 		.tctb-zoekbalk .tctb-zb-leeg { padding: 10px 16px; font-size: 14px; color: #888; }
-		.tctb-zoekbalk .tctb-zb-laden {
-			display: flex; align-items: center; gap: 10px; padding: 12px 16px; font-size: 14px; color: #840562;
+		/* Terwijl er naartoe genavigeerd wordt: gekozen rijtje krijgt een spinner, de rest dimt en reageert niet meer. */
+		.tctb-zoekbalk .tctb-zb-suggesties.tctb-zb-bezig a { opacity: .4; pointer-events: none; }
+		.tctb-zoekbalk .tctb-zb-suggesties a.tctb-zb-actief-laden {
+			opacity: 1; pointer-events: none; color: #840562; font-weight: 600; background: #f9f0f6;
 		}
 		.tctb-zoekbalk .tctb-zb-spinner {
-			width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+			width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
 			border: 2px solid #f0d3e8; border-top-color: #840562;
 			animation: tctb-zb-draai .6s linear infinite;
 		}
 		@keyframes tctb-zb-draai { to { transform: rotate(360deg); } }
 	</style>
+	<?php
+	echo ob_get_clean();
+}
+
+/**
+ * JS wordt inline meegegeven in de shortcode-uitvoer zelf (niet via wp_head/
+ * wp_footer) zodat het altijd naast de HTML staat die het bedient. Wordt
+ * maar één keer per pagina uitgevoerd, ook als meerdere van deze shortcodes
+ * op dezelfde pagina staan.
+ */
+function tctb_print_js() {
+	static $al_geladen = false;
+	if ( $al_geladen ) {
+		return '';
+	}
+	$al_geladen = true;
+	ob_start();
+	?>
 	<script>
 	(function () {
 		// Als het snippet vroeg op de pagina staat (bijv. de zoekbalk bovenaan de homepage)
@@ -752,21 +770,21 @@ function tctb_reparatieprijzen_css_js() {
 			var toestellen = [];
 			try { toestellen = JSON.parse(dataTag.textContent); } catch (e) { toestellen = []; }
 
-			function naarToestel(toestel) {
+			function naarToestel(toestel, gekozenLink) {
 				// Meteen zichtbare laadstatus: de bestemmingspagina kan (bij een trage
 				// site/host) even nodig hebben, dus geef direct feedback dat de klik is
-				// aangekomen in plaats van dat de bezoeker naar een "bevroren" pagina kijkt.
+				// aangekomen — het gekozen rijtje zelf krijgt een spinner, de rest van de
+				// lijst dimt, in plaats van alles te vervangen door een nieuwe melding.
 				input.disabled = true;
-				input.value = toestel.label;
-				lijst.innerHTML = '';
-				var laden = document.createElement('li');
-				laden.className = 'tctb-zb-laden';
-				var spinner = document.createElement('span');
-				spinner.className = 'tctb-zb-spinner';
-				laden.appendChild(spinner);
-				laden.appendChild(document.createTextNode(toestel.label + ' laden…'));
-				lijst.appendChild(laden);
-				lijst.hidden = false;
+				lijst.classList.add('tctb-zb-bezig');
+				if (gekozenLink) {
+					gekozenLink.classList.add('tctb-zb-actief-laden');
+					gekozenLink.innerHTML = '';
+					var spinner = document.createElement('span');
+					spinner.className = 'tctb-zb-spinner';
+					gekozenLink.appendChild(spinner);
+					gekozenLink.appendChild(document.createTextNode(toestel.label));
+				}
 
 				var url = <?php echo wp_json_encode( TCTOOLBOX_TARIEVEN_URL ); ?>;
 				var scheidingsteken = url.indexOf('?') === -1 ? '?' : '&';
@@ -801,7 +819,7 @@ function tctb_reparatieprijzen_css_js() {
 					// de klik wordt verwerkt.
 					a.addEventListener('mousedown', function (e) {
 						e.preventDefault();
-						naarToestel(toestel);
+						naarToestel(toestel, a);
 					});
 					li.appendChild(a);
 					lijst.appendChild(li);

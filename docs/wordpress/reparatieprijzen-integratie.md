@@ -79,9 +79,9 @@ de huidige zoekbalk vervangen door een shortcode-laag met
 **"Recente reparaties" vervangen**: dit blok is het standaard WooCommerce
 "recente producten"-blok en toont toevallig de laatst aangemaakte
 productpagina's — geen echte activiteitsdata. Vervang dit blok door
-`[uitgelichte_toestellen]`. Standaard toont dit iPhone 16, iPhone 16 Pro,
-iPhone 15, Galaxy S24, Galaxy A55 en iPad 2019/2020 — pas dit aan met het
-`toestellen`-attribuut, bijv.:
+`[uitgelichte_toestellen]`. Standaard toont dit 8 toestellen (iPhone 16,
+iPhone 16 Pro, iPhone 15, iPhone 13, Galaxy S24, Galaxy S23, Galaxy A55 en
+iPad 2019/2020) — pas dit aan met het `toestellen`-attribuut, bijv.:
 
 ```
 [uitgelichte_toestellen toestellen="apple:ip16,apple:ip15,samsung:galaxys24,samsung:galaxya55"]
@@ -121,9 +121,16 @@ wacht dus nog op de live Toolbox-API, iedereen daarna binnen die 60 seconden
 krijgt de pagina razendsnel uit de cache. Merkt de site dit nog steeds traag
 aan, verhoog dan gerust `TCTOOLBOX_CACHE_SECONDEN` (bijv. naar 300).
 
-Daarnaast toont de zoekbalk ([reparatie_zoekbalk]) meteen een spinner en
-"… laden" zodra je op een toestel klikt, zodat je direct ziet dat de klik is
-aangekomen — ook als de site of hosting even wat trager reageert.
+Daarnaast toont de zoekbalk ([reparatie_zoekbalk]) het gekozen toestel meteen
+met een spinnertje in de suggestielijst zelf zodra je erop klikt (de rest
+van de lijst dimt), zodat je direct ziet dat de klik is aangekomen — ook als
+de site of hosting even wat trager reageert.
+
+Tot slot: de stijl (`<style>`) wordt niet meer inline in de pagina-inhoud
+geladen, maar via `wp_head` in de `<head>` van de pagina — dus vóórdat er
+iets van de pagina getekend wordt. Anders was op een trage verbinding kort
+de ongestylede thema-opmaak zichtbaar (bijv. een blauwe flits) voordat onze
+eigen stijl "inklapt".
 
 ## Wat dit (bewust) niet doet
 

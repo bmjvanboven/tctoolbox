@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import SnelkeuzeBeheer from "./SnelkeuzeBeheer";
 
+export const dynamic = "force-dynamic";
+
 export default async function SnelkeuzesAdminPage() {
   const groepen = await prisma.snelkeuzeGroep.findMany({
     orderBy: { volgorde: "asc" },

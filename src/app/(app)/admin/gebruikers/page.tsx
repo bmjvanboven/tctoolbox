@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import GebruikersTable from "./GebruikersTable";
 
+export const dynamic = "force-dynamic";
+
 export default async function GebruikersPage() {
   const ruweGebruikers = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },

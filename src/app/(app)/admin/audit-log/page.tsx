@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 const actieLabels: Record<string, { label: string; kleur: string }> = {
   INLOGGEN_GELUKT: { label: "Ingelogd", kleur: "bg-green-100 text-green-700" },
   INLOGGEN_MISLUKT: { label: "Mislukte inlogpoging", kleur: "bg-amber-100 text-amber-700" },

@@ -12,8 +12,10 @@ handmatig hoeft over te typen.
    alleen als het verzoek de juiste geheime sleutel meestuurt (header `X-Api-Key`).
 2. Op reparatiedeurne.nl komt één shortcode-snippet
    ([reparatieprijzen-shortcode.php](reparatieprijzen-shortcode.php)) die deze
-   API bij elk paginabezoek live uitleest en een doorzoekbare prijzenlijst
-   toont, gegroepeerd per merk en toestel (in/uitklapbaar).
+   API bij elk paginabezoek live uitleest en toont als tabs per merk met een
+   kaartjes-grid per toestel (met foto — zie hieronder), gegroepeerd per
+   generatie. Klik op een kaartje voor de prijzentabel in een popup. Zoeken
+   doorzoekt automatisch alle merken tegelijk.
 3. Plaats het shortcode `[reparatieprijzen]` op één centrale pagina (bijv. de
    bestaande "Reparaties"/tarievenlijst-pagina) — geen aparte koppeling per
    product nodig.
@@ -51,6 +53,22 @@ Zet `[reparatieprijzen]` op de gewenste pagina in de WordPress-editor
 (bijv. de huidige tarievenlijst-pagina). De prijslijst verschijnt direct,
 met een zoekbalk bovenaan en per merk/toestel een inklapbaar blokje met de
 reparaties en prijzen.
+
+## Foto's op de kaartjes
+
+De kaartjes gebruiken de bestaande productfoto's die al op reparatiedeurne.nl
+staan (geen aparte upload nodig). Dit werkt via een koppeltabel bovenin
+`reparatieprijzen-shortcode.php` (`TCTOOLBOX_PRODUCT_SLUGS`): Toolbox-
+toestelsleutel → slug van de bijbehorende productpagina. Voor alle 95
+toestellen die nu in de Toolbox staan (Apple, Samsung, Overig, Tablets) is
+deze koppeling al ingevuld.
+
+Voeg je later een nieuw toestel toe in de Toolbox (Admin → Reparatieprijzen
+beheren) dat ook een eigen productpagina op de site krijgt, voeg dan een
+regel toe aan die tabel: `'toestelsleutel' => 'product-slug'`. De
+toestelsleutel staat in de Toolbox-beheerpagina. Zonder match toont het
+kaartje automatisch een neutraal icoon in plaats van een foto — niets
+breekt daarvan.
 
 ## Wat als de Toolbox even niet bereikbaar is?
 

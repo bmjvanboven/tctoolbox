@@ -56,10 +56,14 @@ als `REPARATIEPRIJZEN_API_KEY` in Vercel.
 
 ## Stap 3 — Prijzenlijst plaatsen
 
-Zet `[reparatieprijzen]` op de gewenste pagina in de WordPress-editor
-(bijv. de huidige tarievenlijst-pagina). Vul daarna bovenin de snippet
-`TCTOOLBOX_TARIEVEN_URL` in met de URL van die pagina (bijv. `/tarievenlijst/`)
-— daar linkt de zoekbalk-shortcode straks naartoe.
+Zet `[reparatieprijzen]` op de gewenste pagina in de WordPress-editor. Vul
+daarna bovenin de snippet `TCTOOLBOX_TARIEVEN_URL` in met de URL van die
+pagina — daar linkt de zoekbalk-shortcode straks naartoe. Staat op
+`/reparatieprijzen/`, dan is dat dus:
+
+```php
+define( 'TCTOOLBOX_TARIEVEN_URL', '/reparatieprijzen/' );
+```
 
 ## Stap 4 — Zoekbalk en uitgelichte toestellen op de homepage
 

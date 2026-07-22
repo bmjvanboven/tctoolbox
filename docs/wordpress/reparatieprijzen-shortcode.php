@@ -51,7 +51,7 @@ define( 'TCTOOLBOX_API_KEY', 'a35a093f321617f8779fdd9378e59b2271252e84746977e966
 define( 'TCTOOLBOX_API_URL', 'https://app.tctoolbox.nl/api/public/reparatieprijzen' );
 
 // URL van de pagina waar [reparatieprijzen] op staat — de zoekbalk linkt hiernaartoe.
-define( 'TCTOOLBOX_TARIEVEN_URL', '/tarievenlijst/' );
+define( 'TCTOOLBOX_TARIEVEN_URL', '/reparatieprijzen/' );
 
 // Toolbox-toestelsleutel -> slug van de bestaande productpagina op deze site.
 $GLOBALS['TCTOOLBOX_PRODUCT_SLUGS'] = array(

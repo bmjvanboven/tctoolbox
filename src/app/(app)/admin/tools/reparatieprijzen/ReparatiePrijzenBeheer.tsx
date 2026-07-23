@@ -85,6 +85,40 @@ function TitelCell({ waarde: initieleWaarde, onOpslaan, className }: { waarde: s
   );
 }
 
+function GroepCell({ waarde: initieleWaarde, onOpslaan }: { waarde: string | null | undefined; onOpslaan: (nieuw: string) => Promise<void> }) {
+  const [editing, setEditing] = useState(false);
+  const [waarde, setWaarde] = useState(initieleWaarde ?? "");
+  const [saving, setSaving] = useState(false);
+
+  async function opslaan() {
+    if (waarde.trim() === (initieleWaarde ?? "")) { setEditing(false); return; }
+    setSaving(true);
+    await onOpslaan(waarde.trim());
+    setSaving(false);
+    setEditing(false);
+  }
+
+  if (editing) return (
+    <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
+      <input autoFocus value={waarde} onChange={e => setWaarde(e.target.value)} placeholder="Groep (leeg = geen)"
+        onKeyDown={e => { if (e.key === "Enter") opslaan(); if (e.key === "Escape") { setEditing(false); setWaarde(initieleWaarde ?? ""); } }}
+        className="border border-[#840562] rounded px-2 py-0.5 text-xs w-36 focus:outline-none" />
+      <button onClick={opslaan} disabled={saving} className="p-1 bg-[#840562] text-white rounded hover:bg-[#6d044f]"><Check size={12} /></button>
+      <button onClick={() => { setEditing(false); setWaarde(initieleWaarde ?? ""); }} className="p-1 border border-gray-300 rounded hover:bg-gray-50"><X size={12} /></button>
+    </div>
+  );
+
+  return (
+    <span
+      onClick={e => { e.stopPropagation(); setEditing(true); }}
+      className="group inline-flex items-center gap-1 cursor-pointer text-xs text-gray-400 hover:text-[#840562]"
+    >
+      {initieleWaarde || "+ groep"}
+      <Pencil size={10} className="text-gray-300 group-hover:text-[#840562] shrink-0" />
+    </span>
+  );
+}
+
 function NieuweReparatieForm({ modelId, bestaandeCats, onKlaar }: { modelId: number; bestaandeCats: string[]; onKlaar: () => void }) {
   const alleCats = [...new Set([...Object.keys(CAT_LABELS), ...bestaandeCats])];
   const [cat, setCat] = useState(alleCats[0] ?? "overig");
@@ -213,6 +247,15 @@ export default function ReparatiePrijzenBeheer({ merken }: { merken: Merk[] }) {
     router.refresh();
   }
 
+  async function wijzigGroep(id: number, groep: string) {
+    await fetch("/api/admin/reparatieprijzen/model", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, groep }),
+    });
+    router.refresh();
+  }
+
   async function hernoemItem(id: number, naam: string) {
     await fetch("/api/admin/reparatieprijzen", {
       method: "PUT",
@@ -269,7 +312,7 @@ export default function ReparatiePrijzenBeheer({ merken }: { merken: Merk[] }) {
                       >
                         {openModel === model.id ? <ChevronDown size={14} className="text-gray-400" /> : <ChevronRight size={14} className="text-gray-400" />}
                         <TitelCell waarde={model.label} onOpslaan={nieuw => hernoemModel(model.id, nieuw)} className="text-sm font-medium text-gray-700" />
-                        {model.groep && <span className="text-xs text-gray-400">{model.groep}</span>}
+                        <GroepCell waarde={model.groep} onOpslaan={nieuw => wijzigGroep(model.id, nieuw)} />
                       </div>
                       <button onClick={() => verwijderModel(model.id, model.label)} className="p-1 text-gray-300 hover:text-red-600" title="Toestel verwijderen">
                         <Trash2 size={14} />

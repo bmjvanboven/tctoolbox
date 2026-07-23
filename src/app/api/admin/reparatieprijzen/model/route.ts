@@ -60,14 +60,17 @@ export async function PUT(req: NextRequest) {
   const denied = await requirePrijsbeheer();
   if (denied) return denied;
 
-  const { id, label } = await req.json();
-  if (!id || !label) {
+  const { id, label, groep } = await req.json();
+  if (!id || (!label && groep === undefined)) {
     return NextResponse.json({ error: "Vul alle velden in." }, { status: 400 });
   }
 
   const model = await prisma.reparatieModel.update({
     where: { id: Number(id) },
-    data: { label },
+    data: {
+      ...(label ? { label } : {}),
+      ...(groep !== undefined ? { groep: groep || null } : {}),
+    },
   });
   return NextResponse.json(model);
 }
